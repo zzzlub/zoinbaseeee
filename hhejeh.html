@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>zzlub</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body, html { 
+            height: 100%; 
+            width: 100%;
+            font-family: -apple-system, system-ui, sans-serif; 
+            overflow: hidden; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+        }
+        
+        .bg {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100vw; 
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                        url('https://raw.githubusercontent.com/zzzlub/zlub-site/main/IMG_5991.HEIC');
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat;
+            z-index: -1;
+        }
+
+        /* The Card with Fade Animation */
+        .card {
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            padding: 40px; 
+            border-radius: 24px; 
+            text-align: center; 
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            z-index: 10;
+            max-width: 90%;
+            
+            /* Hidden by default until startAudio is called */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1.5s ease, transform 1.2s ease;
+        }
+
+        /* Active class to trigger the fade */
+        .card.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h1 {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 20px;
+        }
+
+        .tiktok-link {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .tiktok-link:hover {
+            background: #ff0050; 
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 80, 0.4);
+        }
+
+        #overlay {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: #000; 
+            z-index: 999; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            cursor: pointer;
+            transition: opacity 0.8s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="overlay" onclick="startAudio()">
+        <p style="color: white; letter-spacing: 3px; font-size: 12px;">TAP TO ENTER</p>
+    </div>
+
+    <div class="bg"></div>
+
+    <div class="card" id="mainCard">
+        <h1>Team coming soon...</h1>
+        <a href="https://www.tiktok.com/@zzzlub?_r=1&_t=ZN-93K97bcFoFa" target="_blank" class="tiktok-link">TikTok</a>
+    </div>
+
+    <audio id="player" loop preload="auto">
+        <source src="https://raw.githubusercontent.com/zzzlub/zlub-site/main/Weiland%20-%20Blue%20Bands%20-%20saucegodest%20-%20SoundLoadMate.com.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        function startAudio() {
+            const audio = document.getElementById('player');
+            const overlay = document.getElementById('overlay');
+            const card = document.getElementById('mainCard');
+            
+            // Set song to start exactly 20 seconds in
+            audio.currentTime = 20;
+            
+            audio.play().then(() => {
+                // Fade out black overlay
+                overlay.style.opacity = '0';
+                
+                // Fade in the card
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    card.classList.add('active');
+                }, 400);
+            }).catch(err => {
+                overlay.style.display = 'none';
+                card.classList.add('active');
+            });
+        }
+    </script>
+</body>
+</html>
