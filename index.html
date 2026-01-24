@@ -7,7 +7,6 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        /* The body MUST be transparent or the image stays hidden behind it */
         html { background-color: #000; }
         body { 
             width: 100%; min-height: 100vh; 
@@ -29,10 +28,9 @@
             background-image: url('https://raw.githubusercontent.com/zzzlub/zlub-site/main/IMG_5991.jpg');
             background-repeat: no-repeat;
             background-position: center;
-            background-size: 100% 100%; /* Forced Stretch */
+            background-size: 100% 100%; 
         }
 
-        /* Desktop Rotation Fix */
         @media (min-width: 769px) {
             #bg-image {
                 transform: rotate(90deg);
@@ -66,7 +64,7 @@
         /* --- SIDEBAR --- */
         #sidebar {
             position: fixed; top: 0; right: -400px; width: 320px; height: 100%;
-            background: rgba(10,10,10,0.98); backdrop-filter: blur(30px);
+            background: rgba(10,10,10,0.98); backdrop-filter: blur(40px);
             z-index: 1000; padding: 40px; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             border-left: 1px solid rgba(255,255,255,0.1);
             display: flex; flex-direction: column;
@@ -96,6 +94,13 @@
 
         .btn { margin-top: 25px; width: 100%; padding: 15px; border: none; border-radius: 12px; background: #fff; color: #000; font-weight: 800; cursor: pointer; }
         .checkout-btn { background: #00ff88; color: #000; margin-top: 10px; }
+        
+        /* CONTACT LINK */
+        .contact-link { 
+            margin-top: 30px; font-size: 11px; text-align: center; 
+            letter-spacing: 2px; opacity: 0.4; cursor: pointer; transition: 0.3s;
+        }
+        .contact-link:hover { opacity: 1; color: #00ff88; }
 
         #entry {
             position: fixed; inset: 0; background: #000; z-index: 9999;
@@ -126,8 +131,9 @@
         <div id="bag-list"></div>
         <div style="padding-top: 20px;">
             <p id="total-price" style="font-weight: bold; margin-bottom: 15px;">Total: $0</p>
-            <button class="btn checkout-btn" onclick="alert('Redirecting to secure checkout...')">CHECKOUT</button>
+            <button class="btn checkout-btn" onclick="alert('Redirecting to checkout...')">CHECKOUT</button>
             <button class="btn" style="background: rgba(255,255,255,0.1); color: #fff;" onclick="toggleBag()">CLOSE</button>
+            <div class="contact-link" onclick="window.location.href='mailto:support@zzlub.com'">CONTACT SUPPORT</div>
         </div>
     </div>
 
@@ -178,11 +184,9 @@
             document.getElementById('cart-count').innerText = bag.length;
             const list = document.getElementById('bag-list');
             const totalDisplay = document.getElementById('total-price');
-            
             list.innerHTML = bag.map(item => `
                 <div class="bag-item"><span>${item.name}</span><span>$${item.price}</span></div>
             `).join('');
-            
             const total = bag.reduce((sum, item) => sum + item.price, 0);
             totalDisplay.innerText = `Total: $${total}`;
         }
