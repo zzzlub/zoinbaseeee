@@ -18,7 +18,7 @@
             flex-direction: column;
         }
 
-        /* --- ENTRY SCREEN WITH GRADIENT WIPE --- */
+        /* --- ENTRY SCREEN --- */
         #entry {
             position: fixed; inset: 0; background: #000; z-index: 9999;
             display: flex; align-items: center; justify-content: center; cursor: pointer;
@@ -30,100 +30,61 @@
             background-size: 200% auto;
             color: #000;
             background-clip: text;
-            text-fill-color: transparent;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: shine 2.5s linear infinite;
             font-weight: bold;
         }
-        @keyframes shine {
-            to { background-position: 200% center; }
-        }
+        @keyframes shine { to { background-position: 200% center; } }
 
-        /* --- BACKGROUND SYSTEM --- */
-        #bg-container {
-            position: fixed; top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            z-index: -2; overflow: hidden;
-            pointer-events: none;
-            background: #000;
-        }
+        /* --- BACKGROUND --- */
+        #bg-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; background: #000; }
         #bg-image {
             width: 100%; height: 100%;
             background-image: url('https://raw.githubusercontent.com/zzzlub/zlub-site/main/IMG_5991.jpg');
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: 100% 100%; 
+            background-repeat: no-repeat; background-position: center; background-size: 100% 100%; 
         }
         @media (min-width: 769px) {
-            #bg-image {
-                transform: rotate(90deg);
-                width: 100vh; height: 100vw;
-                position: absolute; top: 50%; left: 50%;
-                margin-top: -50vw; margin-left: -50vh;
-            }
+            #bg-image { transform: rotate(90deg); width: 100vh; height: 100vw; position: absolute; top: 50%; left: 50%; margin-top: -50vw; margin-left: -50vh; }
         }
-        .overlay-tint {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.45); z-index: -1; pointer-events: none;
-        }
+        .overlay-tint { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.45); z-index: -1; }
 
         /* --- UI ELEMENTS --- */
-        #chrono { position: fixed; top: 25px; left: 25px; z-index: 100; font-family: monospace; font-size: 1.1rem; }
+        #chrono { position: fixed; top: 25px; left: 25px; z-index: 100; font-family: monospace; }
         .cart-icon {
             position: fixed; top: 25px; right: 25px; z-index: 100;
             width: 55px; height: 55px; border-radius: 50%;
             background: rgba(255,255,255,0.1); backdrop-filter: blur(15px);
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; border: 1px solid rgba(255,255,255,0.2);
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
         }
 
-        /* --- MEDIA PLAYER (BOTTOM LEFT) --- */
-        #player-ui {
-            position: fixed; bottom: 25px; left: 25px; z-index: 100;
-            background: rgba(10,10,10,0.8); backdrop-filter: blur(20px);
-            padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1);
-            width: 240px;
+        /* --- VOICE MESSAGE PLAYER --- */
+        .voice-section { max-width: 400px; margin: 40px auto; padding: 0 20px; }
+        .voice-card {
+            background: #5c5ce0; border-radius: 30px; padding: 12px 20px;
+            display: flex; align-items: center; gap: 15px; position: relative;
         }
-        .track-info { font-size: 8px; letter-spacing: 2px; margin-bottom: 8px; opacity: 0.5; font-family: monospace; text-transform: uppercase; }
-        .progress-bar { width: 100%; height: 2px; background: rgba(255,255,255,0.1); margin-bottom: 12px; cursor: pointer; }
-        #progress { width: 0%; height: 100%; background: #00ff88; box-shadow: 0 0 10px #00ff88; }
-        .controls { display: flex; align-items: center; gap: 15px; }
-        .media-btn { background: none; border: none; color: #fff; cursor: pointer; font-size: 16px; opacity: 0.7; transition: 0.2s; display: flex; align-items: center; }
-        .media-btn:hover { opacity: 1; transform: scale(1.1); }
-        .vol-container { display: flex; align-items: center; gap: 8px; flex-grow: 1; }
-        #vol-slider { width: 100%; accent-color: #00ff88; cursor: pointer; height: 2px; opacity: 0.5; }
+        .play-btn-circle {
+            width: 40px; height: 40px; background: #fff; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: #5c5ce0; font-size: 18px; border: none;
+        }
+        .waveform { flex-grow: 1; height: 20px; display: flex; align-items: center; gap: 2px; }
+        .bar { width: 3px; background: rgba(255,255,255,0.3); border-radius: 2px; height: 100%; }
+        .bar.active { background: #fff; }
+        .duration { font-family: monospace; font-size: 12px; opacity: 0.9; }
 
         /* --- CONTENT --- */
         .content { position: relative; z-index: 1; padding-top: 25vh; text-align: center; flex: 1; }
-        .hero-title { font-size: clamp(3rem, 10vw, 5rem); letter-spacing: -3px; }
-        .tiers {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 25px; max-width: 1200px; margin: 60px auto; padding: 0 20px;
-        }
-        .card {
-            background: rgba(255,255,255,0.05); backdrop-filter: blur(20px);
-            padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
-        }
-        .bronze { border-top: 5px solid #cd7f32; }
-        .silver { border-top: 5px solid #c0c0c0; }
-        .gold { border-top: 5px solid #ffd700; }
-        .ultra { border-top: 5px solid #a333ff; }
+        .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; max-width: 1200px; margin: 60px auto; padding: 0 20px; }
+        .card { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); }
         .btn { margin-top: 25px; width: 100%; padding: 15px; border: none; border-radius: 12px; background: #fff; color: #000; font-weight: 800; cursor: pointer; }
         .checkout-btn { background: #00ff88; color: #000; margin-top: 10px; }
-        
-        #sidebar {
-            position: fixed; top: 0; right: -400px; width: 320px; height: 100%;
-            background: rgba(10,10,10,0.98); backdrop-filter: blur(40px);
-            z-index: 1000; padding: 40px; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            border-left: 1px solid rgba(255,255,255,0.1);
-        }
-        #sidebar.open { right: 0; }
-        .bag-item { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
 
-        footer { position: relative; z-index: 1; padding: 100px 20px 40px; text-align: center; }
-        .footer-email { font-size: 10px; letter-spacing: 5px; opacity: 0.3; text-decoration: none; color: #fff; transition: 0.3s; text-transform: uppercase; }
-        .footer-email:hover { opacity: 1; color: #00ff88; }
+        #sidebar { position: fixed; top: 0; right: -400px; width: 320px; height: 100%; background: rgba(10,10,10,0.98); backdrop-filter: blur(40px); z-index: 1000; padding: 40px; transition: 0.4s; }
+        #sidebar.open { right: 0; }
+        footer { padding: 60px 20px; text-align: center; }
+        .footer-email { font-size: 10px; letter-spacing: 5px; opacity: 0.3; text-decoration: none; color: #fff; }
     </style>
 </head>
 <body>
@@ -134,98 +95,84 @@
 
     <div id="bg-container"><div id="bg-image"></div></div>
     <div class="overlay-tint"></div>
-
     <div id="chrono">00:00:00</div>
 
     <div class="cart-icon" onclick="toggleBag()">
-        <div id="cart-count" style="position: absolute; top: -5px; right: -5px; background: #ff0050; font-size: 12px; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900;">0</div>
+        <div id="cart-count" style="position: absolute; top: -5px; right: -5px; background: #ff0050; font-size: 12px; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">0</div>
         👜
     </div>
 
-    <div id="player-ui">
-        <div class="track-info">Playing: Weiland - Blue Bands</div>
-        <div class="progress-bar" onclick="seek(event)"><div id="progress"></div></div>
-        <div class="controls">
-            <button class="media-btn" id="play-pause" onclick="togglePlay()">⏸</button>
-            <button class="media-btn" onclick="skipAudio()">⏭</button>
-            <div class="vol-container">
-                <button class="media-btn" id="mute-btn" onclick="toggleMute()">🔊</button>
-                <input type="range" id="vol-slider" min="0" max="1" step="0.1" value="1" oninput="updateVolume(this.value)">
+    <div class="content">
+        <h1 class="hero-title" style="font-size: 5rem; letter-spacing: -3px;">zzlub</h1>
+        <p style="letter-spacing: 15px; font-size: 10px; opacity: 0.4;">LARP SERIES</p>
+
+        <div class="tiers">
+            <div class="card" onclick="addToBag('LarpBronze', 30)"><h3>LARPBRONZE</h3><p>$30</p><button class="btn">ADD</button></div>
+            <div class="card" onclick="addToBag('LarpSilver', 50)"><h3>LARPSILVER</h3><p>$50</p><button class="btn">ADD</button></div>
+            <div class="card" onclick="addToBag('LarpGold', 75)"><h3>LARPGOLD</h3><p>$75</p><button class="btn">ADD</button></div>
+            <div class="card" onclick="addToBag('LarpUltra', 100)"><h3>LARPULTRA</h3><p>$100</p><button class="btn">ADD</button></div>
+        </div>
+
+        <div class="voice-section">
+            <div class="voice-card">
+                <button class="play-btn-circle" id="voice-play-btn" onclick="toggleVoice()">▶</button>
+                <div class="waveform">
+                    <div class="bar" style="height: 40%"></div><div class="bar" style="height: 70%"></div><div class="bar" style="height: 100%"></div>
+                    <div class="bar" style="height: 60%"></div><div class="bar" style="height: 80%"></div><div class="bar" style="height: 40%"></div>
+                    <div class="bar" style="height: 90%"></div><div class="bar" style="height: 50%"></div><div class="bar" style="height: 70%"></div>
+                </div>
+                <div class="duration">0:13</div>
             </div>
         </div>
     </div>
 
     <div id="sidebar">
-        <h2 style="letter-spacing: -1px;">Bag</h2>
+        <h2>Bag</h2>
         <div id="bag-list" style="margin-top: 20px;"></div>
-        <div style="padding-top: 20px; margin-top: auto;">
-            <p id="total-price" style="font-weight: bold; margin-bottom: 15px; font-size: 1.2rem;">Total: $0</p>
-            <button class="btn checkout-btn" onclick="alert('Redirecting...')">SECURE CHECKOUT</button>
-            <button class="btn" style="background: rgba(255,255,255,0.05); color: #fff;" onclick="toggleBag()">CLOSE</button>
-        </div>
+        <p id="total-price" style="margin-top: 20px; font-weight: bold;">Total: $0</p>
+        <button class="btn checkout-btn">CHECKOUT</button>
     </div>
 
-    <div class="content">
-        <h1 class="hero-title">zzlub</h1>
-        <p style="letter-spacing: 15px; font-size: 10px; opacity: 0.4; margin-bottom: 50px;">LARP SERIES</p>
-        <div class="tiers">
-            <div class="card bronze" onclick="addToBag('LarpBronze', 30)">
-                <h3>LARPBRONZE</h3><p style="font-size: 2rem; margin-top: 10px;">$30</p>
-                <button class="btn">ADD TO BAG</button>
-            </div>
-            <div class="card silver" onclick="addToBag('LarpSilver', 50)">
-                <h3>LARPSILVER</h3><p style="font-size: 2rem; margin-top: 10px;">$50</p>
-                <button class="btn">ADD TO BAG</button>
-            </div>
-            <div class="card gold" onclick="addToBag('LarpGold', 75)">
-                <h3>LARPGOLD</h3><p style="font-size: 2rem; margin-top: 10px;">$75</p>
-                <button class="btn">ADD TO BAG</button>
-            </div>
-            <div class="card ultra" onclick="addToBag('LarpUltra', 100)">
-                <h3>LARPULTRA</h3><p style="font-size: 2rem; margin-top: 10px;">$100</p>
-                <button class="btn">ADD TO BAG</button>
-            </div>
-        </div>
-    </div>
-
-    <footer>
-        <a href="mailto:comboss@zoinbase.co.uk" class="footer-email">comboss@zoinbase.co.uk</a>
-    </footer>
+    <footer><a href="mailto:comboss@zoinbase.co.uk" class="footer-email">comboss@zoinbase.co.uk</a></footer>
 
     <audio id="audio-player" loop src="https://raw.githubusercontent.com/zzzlub/zlub-site/main/Weiland%20-%20Blue%20Bands%20-%20saucegodest%20-%20SoundLoadMate.com.mp3"></audio>
+    <audio id="voice-player" src="ScreenRecording_01-24-2026 10-51-39_1.mov"></audio>
 
     <script>
-        const audio = document.getElementById('audio-player');
+        const music = document.getElementById('audio-player');
+        const voice = document.getElementById('voice-player');
         let bag = [];
 
         function start() {
-            audio.play();
+            music.play();
             document.getElementById('entry').style.opacity = '0';
             setTimeout(() => document.getElementById('entry').style.display = 'none', 1200);
         }
 
-        function togglePlay() {
-            const btn = document.getElementById('play-pause');
-            if (audio.paused) { audio.play(); btn.innerText = '⏸'; } 
-            else { audio.pause(); btn.innerText = '▶'; }
+        function toggleVoice() {
+            const btn = document.getElementById('voice-play-btn');
+            if (voice.paused) {
+                music.volume = 0.2; // Lower music volume while voice plays
+                voice.play();
+                btn.innerText = '⏸';
+            } else {
+                voice.pause();
+                music.volume = 1.0;
+                btn.innerText = '▶';
+            }
         }
 
-        function skipAudio() { audio.currentTime = 0; audio.play(); }
-        function toggleMute() { audio.muted = !audio.muted; document.getElementById('mute-btn').innerText = audio.muted ? '🔇' : '🔊'; }
-        function updateVolume(val) { audio.volume = val; }
-        function seek(e) { audio.currentTime = (e.offsetX / e.currentTarget.offsetWidth) * audio.duration; }
-
-        audio.ontimeupdate = () => {
-            document.getElementById('progress').style.width = (audio.currentTime / audio.duration) * 100 + "%";
+        voice.onended = () => {
+            document.getElementById('voice-play-btn').innerText = '▶';
+            music.volume = 1.0;
         };
 
         function toggleBag() { document.getElementById('sidebar').classList.toggle('open'); }
         function addToBag(n, p) {
             bag.push({name:n, price:p});
             document.getElementById('cart-count').innerText = bag.length;
-            document.getElementById('bag-list').innerHTML = bag.map(i => `<div class="bag-item"><span>${i.name}</span><span>$${i.price}</span></div>`).join('');
+            document.getElementById('bag-list').innerHTML = bag.map(i => `<div>${i.name} - $${i.price}</div>`).join('');
             document.getElementById('total-price').innerText = `Total: $${bag.reduce((s, i) => s + i.price, 0)}`;
-            if(!document.getElementById('sidebar').classList.contains('open')) toggleBag();
         }
         setInterval(() => { document.getElementById('chrono').innerText = new Date().toLocaleTimeString(); }, 1000);
     </script>
