@@ -5,19 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>zzlub</title>
     <style>
+        /* Essential Reset */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body, html { 
             height: 100%; 
             width: 100%;
             font-family: -apple-system, system-ui, sans-serif; 
-            background: #000;
+            background: #000; /* Fallback */
             color: #fff;
-            /* Scroll is hidden until they tap ENTER */
-            overflow: hidden; 
+            overflow-x: hidden;
+            /* Scroll hidden until TAP TO ENTER */
+            overflow-y: hidden; 
         }
         
-        /* Background remains fixed so content scrolls over it */
+        /* The .HEIC Background - Fixed to back */
         .bg {
             position: fixed; 
             top: 0; 
@@ -29,18 +31,17 @@
             background-size: cover; 
             background-position: center; 
             background-repeat: no-repeat;
-            z-index: -1;
+            z-index: -1; /* Keeps it behind everything */
         }
 
-        /* Layout wrapper */
+        /* Content Wrapper */
         .content-wrapper {
+            position: relative;
             width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            z-index: 1;
         }
 
-        /* Hero Section (First view) */
+        /* Hero Section */
         .hero {
             height: 100vh;
             display: flex;
@@ -66,6 +67,7 @@
 
         .card.active { opacity: 1; transform: translateY(0); }
 
+        /* Shimmer Text */
         h1 {
             font-size: 1.8rem;
             font-weight: 700;
@@ -95,52 +97,55 @@
 
         .tiktok-link:hover { background: #ff0050; transform: translateY(-2px); }
 
-        /* Payment Tiers Section */
+        /* Pricing Tiers */
         .tiers-section {
             padding: 100px 20px;
             width: 100%;
-            max-width: 1200px;
+            max-width: 1100px;
+            margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
         }
 
         .tier-card {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            padding: 30px;
-            border-radius: 20px;
+            padding: 35px 25px;
+            border-radius: 22px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             transition: transform 0.3s ease;
         }
 
-        .tier-card:hover { transform: translateY(-10px); background: rgba(255, 255, 255, 0.1); }
+        .tier-card:hover { transform: translateY(-8px); background: rgba(255, 255, 255, 0.12); }
 
-        .tier-name { font-weight: 800; font-size: 1.2rem; margin-bottom: 10px; letter-spacing: 1px; }
-        .tier-price { font-size: 2rem; font-weight: 300; margin-bottom: 20px; }
+        .tier-name { font-weight: 800; font-size: 1.1rem; margin-bottom: 8px; letter-spacing: 1px; color: #fff; }
+        .tier-price { font-size: 2.2rem; font-weight: 300; margin-bottom: 25px; color: #fff; }
         
-        /* Specific Tier Colors */
-        .bronze { border-top: 4px solid #cd7f32; }
-        .silver { border-top: 4px solid #c0c0c0; }
-        .gold { border-top: 4px solid #ffd700; }
-        .ultra { border-top: 4px solid #a333ff; }
+        /* Tier Accent Colors */
+        .bronze { border-top: 5px solid #cd7f32; }
+        .silver { border-top: 5px solid #c0c0c0; }
+        .gold { border-top: 5px solid #ffd700; }
+        .ultra { border-top: 5px solid #a333ff; }
 
         .cart-btn {
             width: 100%;
-            padding: 12px;
-            border-radius: 10px;
+            padding: 14px;
+            border-radius: 12px;
             border: none;
             background: #fff;
             color: #000;
             font-weight: 700;
+            font-size: 0.9rem;
             cursor: pointer;
-            transition: opacity 0.3s;
+            transition: transform 0.2s;
         }
 
-        .cart-btn:hover { opacity: 0.8; }
+        .cart-btn:active { transform: scale(0.95); }
 
+        /* Start Overlay */
         #overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 999; display: flex; 
@@ -162,7 +167,7 @@
             <div class="card" id="mainCard">
                 <h1>Team coming soon...</h1>
                 <a href="https://www.tiktok.com/@zzzlub?_r=1&_t=ZN-93K97bcFoFa" target="_blank" class="tiktok-link">TikTok</a>
-                <p style="margin-top: 20px; font-size: 10px; opacity: 0.5; letter-spacing: 1px;">SCROLL DOWN</p>
+                <p style="margin-top: 30px; font-size: 10px; opacity: 0.4; letter-spacing: 2px;">SCROLL</p>
             </div>
         </section>
 
@@ -188,6 +193,8 @@
                 <button class="cart-btn">Add to Cart</button>
             </div>
         </section>
+        
+        <div style="height: 100px;"></div>
     </div>
 
     <audio id="player" loop preload="auto">
@@ -204,7 +211,6 @@
             
             audio.play().then(() => {
                 overlay.style.opacity = '0';
-                // Allow scrolling now that the site is entered
                 document.body.style.overflowY = "auto"; 
                 
                 setTimeout(() => {
