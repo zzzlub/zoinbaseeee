@@ -13,9 +13,10 @@
             color: #fff;
             font-family: -apple-system, system-ui, sans-serif;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* --- FIXED BACKGROUND IMAGE --- */
+        /* --- BACKGROUND SYSTEM --- */
         #bg-image {
             position: fixed;
             top: 0;
@@ -31,7 +32,7 @@
         .overlay-tint { 
             position: fixed; 
             inset: 0; 
-            background: rgba(0, 0, 0, 0.6); 
+            background: rgba(0, 0, 0, 0.65); 
             z-index: -1; 
         }
 
@@ -39,13 +40,13 @@
         #auth-gate {
             position: fixed; inset: 0; z-index: 10000;
             display: flex; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(10px);
-            transition: opacity 0.6s ease;
+            background: #000; /* Start full black for "login every time" feel */
+            transition: opacity 0.8s ease;
         }
         .terminal-box {
             width: 340px; padding: 40px; border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px; background: #0a0a0a; text-align: center;
+            border-radius: 20px; background: rgba(10, 10, 10, 0.95); text-align: center;
+            backdrop-filter: blur(10px);
         }
         
         .fade-text {
@@ -73,7 +74,6 @@
         .hero-title { font-size: 5rem; letter-spacing: -3px; }
         .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; max-width: 1200px; margin: 40px auto; padding: 20px; }
         
-        /* Tier Cards */
         .card { 
             background: rgba(0, 0, 0, 0.85); padding: 30px; border-radius: 25px; 
             border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;
@@ -88,11 +88,9 @@
             border-radius: 10px; background: #fff; color: #000; 
             font-weight: bold; cursor: pointer;
         }
-        .buy-btn:hover { background: #00ff88; }
 
-        /* UI ELEMENTS */
         #player-ui { position: fixed; bottom: 25px; left: 25px; z-index: 100; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 12px; border: 1px solid #222; }
-        #chrono { position: fixed; top: 25px; left: 25px; font-family: monospace; color: #555; }
+        #chrono { position: fixed; top: 25px; left: 25px; font-family: monospace; color: #444; }
         .cart-icon { position: fixed; top: 25px; right: 25px; z-index: 100; width: 50px; height: 50px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     </style>
 </head>
@@ -107,7 +105,7 @@
             <input type="email" id="login-email" class="terminal-input" placeholder="ACCESS_EMAIL">
             <input type="password" id="login-pass" class="terminal-input" placeholder="PIN_CODE">
             <button class="auth-btn" onclick="handleLogin()">AUTHORIZE</button>
-            <span class="toggle-link" onclick="toggleAuth()">Request Access (Sign Up)</span>
+            <span class="toggle-link" onclick="toggleAuth()">Sign Up</span>
             <div id="login-error" style="color:#ff0050; font-size:10px; margin-top:10px;"></div>
         </div>
 
@@ -116,14 +114,14 @@
             <input type="email" id="sig-email" class="terminal-input" placeholder="NEW_EMAIL">
             <input type="password" id="sig-pass" class="terminal-input" placeholder="CREATE_PIN">
             <button class="auth-btn" onclick="handleSignup()">REGISTER</button>
-            <span class="toggle-link" onclick="toggleAuth()">Return to Login</span>
+            <span class="toggle-link" onclick="toggleAuth()">Back</span>
             <div id="sig-error" style="color:#00ff88; font-size:10px; margin-top:10px;"></div>
         </div>
     </div>
 
     <div id="chrono">00:00:00</div>
 
-    <div class="cart-icon" onclick="alert('Bag System Active')">
+    <div class="cart-icon">
         <div id="cart-count" style="position: absolute; top: -5px; right: -5px; background: #ff0050; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px;">0</div>
         👜
     </div>
@@ -141,27 +139,27 @@
             <div class="card bronze">
                 <h3 style="color:#cd7f32">LARPBRONZE</h3>
                 <p style="margin: 10px 0;">$30</p>
-                <button class="buy-btn" onclick="addToBag('Bronze', 30)">ADD</button>
+                <button class="buy-btn" onclick="addToBag()">ADD</button>
             </div>
             <div class="card silver">
                 <h3 style="color:#c0c0c0">LARPSILVER</h3>
                 <p style="margin: 10px 0;">$50</p>
-                <button class="buy-btn" onclick="addToBag('Silver', 50)">ADD</button>
+                <button class="buy-btn" onclick="addToBag()">ADD</button>
             </div>
             <div class="card gold">
                 <h3 style="color:#ffd700">LARPGOLD</h3>
                 <p style="margin: 10px 0;">$75</p>
-                <button class="buy-btn" onclick="addToBag('Gold', 75)">ADD</button>
+                <button class="buy-btn" onclick="addToBag()">ADD</button>
             </div>
             <div class="card ultra">
                 <h3 style="color:#a333ff">LARPULTRA</h3>
                 <p style="margin: 10px 0;">$100</p>
-                <button class="buy-btn" onclick="addToBag('Ultra', 100)">ADD</button>
+                <button class="buy-btn" onclick="addToBag()">ADD</button>
             </div>
         </div>
     </div>
 
-    <audio id="audio-player" loop src="https://raw.githubusercontent.com/zzzlub/zlub-site/main/Weiland%20-%20Blue%20Bands%20-%20saucegodest%20-%20SoundLoadMate.com.mp3"></audio>
+    <audio id="audio-player" src="https://raw.githubusercontent.com/zzzlub/zlub-site/main/Weiland%20-%20Blue%20Bands%20-%20saucegodest%20-%20SoundLoadMate.com.mp3"></audio>
 
     <script>
         const _URL = "https://afipcjspeutknkyugqcf.supabase.co";
@@ -169,11 +167,15 @@
         const supabaseClient = supabase.createClient(_URL, _KEY);
         const music = document.getElementById('audio-player');
 
+        // FORCE LOGOUT ON EVERY REFRESH
+        window.onload = async () => {
+            await supabaseClient.auth.signOut();
+            document.getElementById('auth-gate').style.display = 'flex';
+        };
+
         function toggleAuth() {
-            const login = document.getElementById('login-form');
-            const signup = document.getElementById('signup-form');
-            login.style.display = login.style.display === 'none' ? 'block' : 'none';
-            signup.style.display = signup.style.display === 'none' ? 'block' : 'none';
+            document.getElementById('login-form').style.display = document.getElementById('login-form').style.display === 'none' ? 'block' : 'none';
+            document.getElementById('signup-form').style.display = document.getElementById('signup-form').style.display === 'none' ? 'block' : 'none';
         }
 
         async function handleLogin() {
@@ -189,21 +191,21 @@
             const password = document.getElementById('sig-pass').value;
             const { error } = await supabaseClient.auth.signUp({ email, password });
             if (error) document.getElementById('sig-error').style.color = "#ff0050", document.getElementById('sig-error').innerText = error.message.toUpperCase();
-            else document.getElementById('sig-error').style.color = "#00ff88", document.getElementById('sig-error').innerText = "SUCCESS. CHECK EMAIL.";
+            else document.getElementById('sig-error').style.color = "#00ff88", document.getElementById('sig-error').innerText = "CHECK EMAIL TO CONFIRM.";
         }
 
         function unlock() {
             document.getElementById('auth-gate').style.opacity = '0';
-            setTimeout(() => { document.getElementById('auth-gate').style.display = 'none'; music.play(); }, 600);
+            setTimeout(() => { 
+                document.getElementById('auth-gate').style.display = 'none'; 
+                // AUTO PLAY AT 00:20
+                music.currentTime = 20; 
+                music.play(); 
+            }, 800);
         }
 
-        window.onload = async () => {
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session) unlock();
-        };
-
         function togglePlay() { music.paused ? music.play() : music.pause(); }
-        function addToBag(n, p) { 
+        function addToBag() { 
             let count = parseInt(document.getElementById('cart-count').innerText);
             document.getElementById('cart-count').innerText = count + 1;
         }
