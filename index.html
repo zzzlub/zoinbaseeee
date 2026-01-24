@@ -14,38 +14,27 @@
             overflow-x: hidden;
         }
 
-        /* DYNAMIC ROTATING BACKGROUND */
+        /* DYNAMIC BACKGROUND ENGINE */
         #bg-canvas {
             position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
+            top: 50%; left: 50%;
+            width: 100vmax; height: 100vmax; /* Ensures coverage during rotation */
             z-index: -2;
             background-image: url('https://raw.githubusercontent.com/zzzlub/zlub-site/main/IMG_5991.jpg');
             background-repeat: no-repeat;
             background-position: center;
-            transition: opacity 0.8s ease;
+            transform: translate(-50%, -50%); /* Keeps it centered */
+            background-size: cover;
         }
 
-        /* DESKTOP: Rotate 90deg and keep Aspect Ratio */
+        /* Desktop: Rotate 90deg */
         @media (min-width: 769px) {
-            #bg-canvas {
-                transform: rotate(90deg);
-                /* Using 150vmax ensures that when rotated, the image covers the whole screen 
-                   without leaving black bars on the sides while keeping its shape. */
-                background-size: cover; 
-                width: 100vh;  /* Swap dimensions to handle rotation logic */
-                height: 100vw;
-                top: 50%; left: 50%;
-                translate: -50% -50%;
-            }
+            #bg-canvas { transform: translate(-50%, -50%) rotate(90deg); }
         }
 
-        /* MOBILE: Natural Vertical Orientation + Scroll Fade */
+        /* Mobile: No rotation, No fade */
         @media (max-width: 768px) {
-            #bg-canvas {
-                background-size: cover;
-                transform: rotate(0deg);
-            }
+            #bg-canvas { transform: translate(-50%, -50%) rotate(0deg); }
         }
 
         .overlay-tint {
@@ -79,9 +68,9 @@
         }
         #sidebar.open { right: 0; }
 
-        /* CONTENT LAYER */
+        /* CONTENT */
         .content { position: relative; z-index: 1; padding-top: 35vh; text-align: center; }
-        .hero-title { font-size: 5rem; letter-spacing: -3px; margin-bottom: 5px; }
+        .hero-title { font-size: 5rem; letter-spacing: -3px; margin-bottom: 5px; text-shadow: 0 0 30px rgba(0,0,0,0.5); }
         
         .tiers {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -91,7 +80,7 @@
         .card {
             background: rgba(255,255,255,0.05); backdrop-filter: blur(20px);
             padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
-            transition: 0.3s ease;
+            transition: 0.3s;
         }
         .card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.1); }
         .btn { margin-top: 25px; width: 100%; padding: 15px; border: none; border-radius: 12px; background: #fff; font-weight: 800; cursor: pointer; }
@@ -154,21 +143,12 @@
 
     <script>
         const audio = document.getElementById('audio-player');
-        const bg = document.getElementById('bg-canvas');
         let bag = [];
 
         function start() {
             audio.play();
             document.getElementById('entry').classList.add('hidden');
         }
-
-        // MOBILE SCROLL FADE
-        window.addEventListener('scroll', () => {
-            if (window.innerWidth <= 768) {
-                let opacity = 1 - (window.scrollY / 500);
-                bg.style.opacity = Math.max(opacity, 0);
-            }
-        });
 
         function toggleBag() { document.getElementById('sidebar').classList.toggle('open'); }
 
