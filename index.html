@@ -13,6 +13,8 @@
             background: transparent; color: #fff;
             font-family: -apple-system, system-ui, sans-serif;
             overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         /* --- BACKGROUND SYSTEM --- */
@@ -74,7 +76,7 @@
         .bag-item { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
 
         /* --- CONTENT & CARDS --- */
-        .content { position: relative; z-index: 1; padding-top: 30vh; text-align: center; }
+        .content { position: relative; z-index: 1; padding-top: 30vh; text-align: center; flex: 1; }
         .hero-title { font-size: 5rem; letter-spacing: -3px; margin-bottom: 10px; }
 
         .tiers {
@@ -95,12 +97,23 @@
         .btn { margin-top: 25px; width: 100%; padding: 15px; border: none; border-radius: 12px; background: #fff; color: #000; font-weight: 800; cursor: pointer; }
         .checkout-btn { background: #00ff88; color: #000; margin-top: 10px; }
         
-        /* CONTACT LINK */
-        .contact-link { 
-            margin-top: 30px; font-size: 11px; text-align: center; 
-            letter-spacing: 2px; opacity: 0.4; cursor: pointer; transition: 0.3s;
+        /* --- FOOTER / EMAIL --- */
+        footer {
+            position: relative;
+            z-index: 1;
+            padding: 60px 20px;
+            text-align: center;
         }
-        .contact-link:hover { opacity: 1; color: #00ff88; }
+        .footer-email {
+            font-size: 11px;
+            letter-spacing: 5px;
+            opacity: 0.4;
+            text-decoration: none;
+            color: #fff;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+        .footer-email:hover { opacity: 1; color: #00ff88; }
 
         #entry {
             position: fixed; inset: 0; background: #000; z-index: 9999;
@@ -133,7 +146,6 @@
             <p id="total-price" style="font-weight: bold; margin-bottom: 15px;">Total: $0</p>
             <button class="btn checkout-btn" onclick="alert('Redirecting to checkout...')">CHECKOUT</button>
             <button class="btn" style="background: rgba(255,255,255,0.1); color: #fff;" onclick="toggleBag()">CLOSE</button>
-            <div class="contact-link" onclick="window.location.href='mailto:support@zzlub.com'">CONTACT SUPPORT</div>
         </div>
     </div>
 
@@ -160,6 +172,10 @@
             </div>
         </div>
     </div>
+
+    <footer>
+        <a href="mailto:support@zzlub.com" class="footer-email">support@zzlub.com</a>
+    </footer>
 
     <audio id="audio-player" loop src="https://raw.githubusercontent.com/zzzlub/zlub-site/main/Weiland%20-%20Blue%20Bands%20-%20saucegodest%20-%20SoundLoadMate.com.mp3"></audio>
 
