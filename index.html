@@ -11,27 +11,41 @@
             width: 100%; min-height: 100vh; 
             background-color: #000; color: #fff;
             font-family: -apple-system, system-ui, sans-serif;
+            overflow-x: hidden;
         }
 
-        /* 1. THE BACKGROUND CANVAS */
+        /* DYNAMIC ROTATING BACKGROUND */
         #bg-canvas {
-            position: fixed; top: 0; left: 0;
+            position: fixed;
+            top: 0; left: 0;
             width: 100vw; height: 100vh;
-            z-index: -2; /* Stays at the very back */
+            z-index: -2;
             background-image: url('https://raw.githubusercontent.com/zzzlub/zlub-site/main/IMG_5991.jpg');
-            background-position: center;
             background-repeat: no-repeat;
-            opacity: 1;
+            background-position: center;
+            transition: opacity 0.8s ease;
         }
 
-        /* Desktop: Stretch */
+        /* DESKTOP: Rotate 90deg and keep Aspect Ratio */
         @media (min-width: 769px) {
-            #bg-canvas { background-size: 100% 100%; }
+            #bg-canvas {
+                transform: rotate(90deg);
+                /* Using 150vmax ensures that when rotated, the image covers the whole screen 
+                   without leaving black bars on the sides while keeping its shape. */
+                background-size: cover; 
+                width: 100vh;  /* Swap dimensions to handle rotation logic */
+                height: 100vw;
+                top: 50%; left: 50%;
+                translate: -50% -50%;
+            }
         }
 
-        /* Mobile: Cover (to prevent stretching) */
+        /* MOBILE: Natural Vertical Orientation + Scroll Fade */
         @media (max-width: 768px) {
-            #bg-canvas { background-size: cover; }
+            #bg-canvas {
+                background-size: cover;
+                transform: rotate(0deg);
+            }
         }
 
         .overlay-tint {
@@ -40,8 +54,8 @@
             pointer-events: none;
         }
 
-        /* 2. UI ELEMENTS */
-        #chrono { position: fixed; top: 25px; left: 25px; z-index: 100; font-family: monospace; }
+        /* UI ELEMENTS */
+        #chrono { position: fixed; top: 25px; left: 25px; z-index: 100; font-family: monospace; letter-spacing: 2px; }
         
         .cart-icon {
             position: fixed; top: 25px; right: 25px; z-index: 100;
@@ -57,30 +71,29 @@
             display: flex; align-items: center; justify-content: center; font-weight: 900;
         }
 
-        /* 3. SIDEBAR */
         #sidebar {
             position: fixed; top: 0; right: -400px; width: 320px; height: 100%;
             background: rgba(10,10,10,0.98); backdrop-filter: blur(30px);
-            z-index: 1000; padding: 40px; transition: 0.4s ease;
+            z-index: 1000; padding: 40px; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             border-left: 1px solid rgba(255,255,255,0.1);
         }
         #sidebar.open { right: 0; }
 
-        /* 4. CONTENT LAYER */
-        .content { position: relative; z-index: 1; padding-top: 35vh; text-align: center; width: 100%; }
+        /* CONTENT LAYER */
+        .content { position: relative; z-index: 1; padding-top: 35vh; text-align: center; }
+        .hero-title { font-size: 5rem; letter-spacing: -3px; margin-bottom: 5px; }
         
         .tiers {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 25px; max-width: 1200px; margin: 100px auto; padding: 0 20px;
+            gap: 25px; max-width: 1200px; margin: 80px auto; padding: 0 20px;
         }
 
         .card {
             background: rgba(255,255,255,0.05); backdrop-filter: blur(20px);
             padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
-            transition: 0.3s;
+            transition: 0.3s ease;
         }
-        .card:hover { background: rgba(255,255,255,0.1); }
-
+        .card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.1); }
         .btn { margin-top: 25px; width: 100%; padding: 15px; border: none; border-radius: 12px; background: #fff; font-weight: 800; cursor: pointer; }
 
         #entry {
@@ -114,21 +127,25 @@
     </div>
 
     <div class="content">
-        <h1 style="font-size: 4rem; letter-spacing: -2px;">zzlub</h1>
-        <p style="letter-spacing: 10px; font-size: 10px; opacity: 0.6; margin-bottom: 50px;">LARP SERIES</p>
+        <h1 class="hero-title">zzlub</h1>
+        <p style="letter-spacing: 12px; font-size: 10px; opacity: 0.6; margin-bottom: 50px;">LARP SERIES</p>
 
         <div class="tiers">
             <div class="card" style="border-top: 4px solid #cd7f32;">
-                <h3>LARPBRONZE</h3><p>$30</p><button class="btn" onclick="addToBag('LarpBronze', 30)">ADD TO BAG</button>
+                <h3>LARPBRONZE</h3><p style="font-size: 1.8rem; margin-top: 10px;">$30</p>
+                <button class="btn" onclick="addToBag('LarpBronze', 30)">ADD TO BAG</button>
             </div>
             <div class="card" style="border-top: 4px solid #c0c0c0;">
-                <h3>LARPSILVER</h3><p>$50</p><button class="btn" onclick="addToBag('LarpSilver', 50)">ADD TO BAG</button>
+                <h3>LARPSILVER</h3><p style="font-size: 1.8rem; margin-top: 10px;">$50</p>
+                <button class="btn" onclick="addToBag('LarpSilver', 50)">ADD TO BAG</button>
             </div>
             <div class="card" style="border-top: 4px solid #ffd700;">
-                <h3>LARPGOLD</h3><p>$75</p><button class="btn" onclick="addToBag('LarpGold', 75)">ADD TO BAG</button>
+                <h3>LARPGOLD</h3><p style="font-size: 1.8rem; margin-top: 10px;">$75</p>
+                <button class="btn" onclick="addToBag('LarpGold', 75)">ADD TO BAG</button>
             </div>
             <div class="card" style="border-top: 4px solid #a333ff;">
-                <h3>LARPULTRA</h3><p>$100</p><button class="btn" onclick="addToBag('LarpUltra', 100)">ADD TO BAG</button>
+                <h3>LARPULTRA</h3><p style="font-size: 1.8rem; margin-top: 10px;">$100</p>
+                <button class="btn" onclick="addToBag('LarpUltra', 100)">ADD TO BAG</button>
             </div>
         </div>
     </div>
@@ -145,7 +162,7 @@
             document.getElementById('entry').classList.add('hidden');
         }
 
-        // FADE BACKGROUND ON SCROLL (MOBILE ONLY)
+        // MOBILE SCROLL FADE
         window.addEventListener('scroll', () => {
             if (window.innerWidth <= 768) {
                 let opacity = 1 - (window.scrollY / 500);
@@ -160,11 +177,11 @@
             document.getElementById('cart-count').innerText = bag.length;
             const list = document.getElementById('bag-items');
             list.innerHTML = bag.map(item => `
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px;">
                     <span>${item.name}</span><span>$${item.price}</span>
                 </div>
             `).join('');
-            toggleBag();
+            if(!document.getElementById('sidebar').classList.contains('open')) toggleBag();
         }
 
         setInterval(() => { 
