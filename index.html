@@ -60,23 +60,24 @@
             cursor: pointer; border: 1px solid rgba(255,255,255,0.2);
         }
 
-        /* --- ADVANCED MEDIA CONTROL --- */
+        /* --- BOTTOM LEFT MEDIA PLAYER --- */
         #player-ui {
-            position: fixed; top: 90px; right: 25px; z-index: 100;
-            background: rgba(255,255,255,0.05); backdrop-filter: blur(15px);
-            padding: 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
-            width: 220px;
+            position: fixed; bottom: 25px; left: 25px; z-index: 100;
+            background: rgba(10,10,10,0.8); backdrop-filter: blur(20px);
+            padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1);
+            width: 240px;
         }
-        .track-info { font-size: 9px; letter-spacing: 1px; margin-bottom: 8px; opacity: 0.7; font-family: monospace; }
+        .track-info { font-size: 8px; letter-spacing: 2px; margin-bottom: 8px; opacity: 0.5; font-family: monospace; text-transform: uppercase; }
         .progress-bar { width: 100%; height: 2px; background: rgba(255,255,255,0.1); margin-bottom: 12px; cursor: pointer; }
-        #progress { width: 0%; height: 100%; background: #00ff88; transition: width 0.1s linear; }
+        #progress { width: 0%; height: 100%; background: #00ff88; box-shadow: 0 0 10px #00ff88; }
         
-        .controls { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-        .media-btn { background: none; border: none; color: #fff; cursor: pointer; font-size: 12px; opacity: 0.8; }
-        .media-btn:hover { opacity: 1; color: #00ff88; }
+        .controls { display: flex; align-items: center; gap: 15px; }
+        .media-btn { background: none; border: none; color: #fff; cursor: pointer; font-size: 16px; opacity: 0.7; transition: 0.2s; display: flex; align-items: center; }
+        .media-btn:hover { opacity: 1; transform: scale(1.1); }
         
-        .vol-container { display: flex; align-items: center; gap: 5px; flex-grow: 1; }
-        #vol-slider { width: 100%; accent-color: #00ff88; cursor: pointer; height: 3px; }
+        .vol-container { display: flex; align-items: center; gap: 8px; flex-grow: 1; }
+        #vol-slider { width: 100%; accent-color: #00ff88; cursor: pointer; height: 2px; opacity: 0.5; }
+        #vol-slider:hover { opacity: 1; }
 
         /* --- SIDEBAR & CONTENT --- */
         #sidebar {
@@ -84,24 +85,23 @@
             background: rgba(10,10,10,0.98); backdrop-filter: blur(40px);
             z-index: 1000; padding: 40px; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             border-left: 1px solid rgba(255,255,255,0.1);
-            display: flex; flex-direction: column;
         }
         #sidebar.open { right: 0; }
-        #bag-list { flex-grow: 1; overflow-y: auto; margin-top: 20px; }
+        #bag-list { margin-top: 20px; max-height: 60vh; overflow-y: auto; }
         .bag-item { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
 
-        .content { position: relative; z-index: 1; padding-top: 30vh; text-align: center; flex: 1; }
-        .hero-title { font-size: 5rem; letter-spacing: -3px; }
+        .content { position: relative; z-index: 1; padding-top: 25vh; text-align: center; flex: 1; }
+        .hero-title { font-size: clamp(3rem, 10vw, 5rem); letter-spacing: -3px; }
 
         .tiers {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 25px; max-width: 1200px; margin: 80px auto; padding: 0 20px;
+            gap: 25px; max-width: 1200px; margin: 60px auto; padding: 0 20px;
         }
 
         .card {
             background: rgba(255,255,255,0.05); backdrop-filter: blur(20px);
             padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
-            cursor: pointer; transition: 0.3s;
+            transition: 0.3s;
         }
         .card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.1); }
 
@@ -113,8 +113,8 @@
         .btn { margin-top: 25px; width: 100%; padding: 15px; border: none; border-radius: 12px; background: #fff; color: #000; font-weight: 800; cursor: pointer; }
         .checkout-btn { background: #00ff88; color: #000; margin-top: 10px; }
         
-        footer { position: relative; z-index: 1; padding: 60px 20px; text-align: center; }
-        .footer-email { font-size: 11px; letter-spacing: 5px; opacity: 0.4; text-decoration: none; color: #fff; transition: 0.3s; }
+        footer { position: relative; z-index: 1; padding: 100px 20px 40px; text-align: center; }
+        .footer-email { font-size: 10px; letter-spacing: 5px; opacity: 0.3; text-decoration: none; color: #fff; transition: 0.3s; text-transform: uppercase; }
         .footer-email:hover { opacity: 1; color: #00ff88; }
 
         #entry {
@@ -122,13 +122,12 @@
             display: flex; align-items: center; justify-content: center; cursor: pointer;
             transition: opacity 1s ease;
         }
-        #entry.hidden { opacity: 0; pointer-events: none; }
     </style>
 </head>
 <body>
 
     <div id="entry" onclick="start()">
-        <p style="letter-spacing: 5px; font-size: 11px; font-family: monospace;">TAP TO ENTER</p>
+        <p style="letter-spacing: 8px; font-size: 10px; font-family: monospace; opacity: 0.6;">INITIALIZE SYSTEM</p>
     </div>
 
     <div id="bg-container"><div id="bg-image"></div></div>
@@ -142,43 +141,47 @@
     </div>
 
     <div id="player-ui">
-        <div class="track-info">WEILAND - BLUE BANDS</div>
+        <div class="track-info">Playing: Weiland - Blue Bands</div>
         <div class="progress-bar" onclick="seek(event)"><div id="progress"></div></div>
         <div class="controls">
-            <button class="media-btn" id="play-pause" onclick="togglePlay()">pause</button>
-            <button class="media-btn" onclick="skipAudio()">skip</button>
+            <button class="media-btn" id="play-pause" onclick="togglePlay()">⏸</button>
+            <button class="media-btn" onclick="skipAudio()">⏭</button>
             <div class="vol-container">
-                <button class="media-btn" id="mute-btn" onclick="toggleMute()">vol</button>
+                <button class="media-btn" id="mute-btn" onclick="toggleMute()">🔊</button>
                 <input type="range" id="vol-slider" min="0" max="1" step="0.1" value="1" oninput="updateVolume(this.value)">
             </div>
         </div>
     </div>
 
     <div id="sidebar">
-        <h2 style="letter-spacing: -1px;">Your Bag</h2>
+        <h2 style="letter-spacing: -1px;">Bag</h2>
         <div id="bag-list"></div>
-        <div style="padding-top: 20px;">
-            <p id="total-price" style="font-weight: bold; margin-bottom: 15px;">Total: $0</p>
-            <button class="btn checkout-btn" onclick="alert('Redirecting...')">CHECKOUT</button>
-            <button class="btn" style="background: rgba(255,255,255,0.1); color: #fff;" onclick="toggleBag()">CLOSE</button>
+        <div style="padding-top: 20px; margin-top: auto;">
+            <p id="total-price" style="font-weight: bold; margin-bottom: 15px; font-size: 1.2rem;">Total: $0</p>
+            <button class="btn checkout-btn" onclick="alert('Redirecting...')">SECURE CHECKOUT</button>
+            <button class="btn" style="background: rgba(255,255,255,0.05); color: #fff;" onclick="toggleBag()">CLOSE</button>
         </div>
     </div>
 
     <div class="content">
         <h1 class="hero-title">zzlub</h1>
-        <p style="letter-spacing: 12px; font-size: 10px; opacity: 0.6; margin-bottom: 50px;">LARP SERIES</p>
+        <p style="letter-spacing: 15px; font-size: 10px; opacity: 0.4; margin-bottom: 50px;">LARP SERIES</p>
         <div class="tiers">
             <div class="card bronze" onclick="addToBag('LarpBronze', 30)">
-                <h3>LARPBRONZE</h3><p style="font-size: 2rem;">$30</p><button class="btn">ADD TO BAG</button>
+                <h3>LARPBRONZE</h3><p style="font-size: 2rem; margin-top: 10px;">$30</p>
+                <button class="btn">ADD TO BAG</button>
             </div>
             <div class="card silver" onclick="addToBag('LarpSilver', 50)">
-                <h3>LARPSILVER</h3><p style="font-size: 2rem;">$50</p><button class="btn">ADD TO BAG</button>
+                <h3>LARPSILVER</h3><p style="font-size: 2rem; margin-top: 10px;">$50</p>
+                <button class="btn">ADD TO BAG</button>
             </div>
             <div class="card gold" onclick="addToBag('LarpGold', 75)">
-                <h3>LARPGOLD</h3><p style="font-size: 2rem;">$75</p><button class="btn">ADD TO BAG</button>
+                <h3>LARPGOLD</h3><p style="font-size: 2rem; margin-top: 10px;">$75</p>
+                <button class="btn">ADD TO BAG</button>
             </div>
             <div class="card ultra" onclick="addToBag('LarpUltra', 100)">
-                <h3>LARPULTRA</h3><p style="font-size: 2rem;">$100</p><button class="btn">ADD TO BAG</button>
+                <h3>LARPULTRA</h3><p style="font-size: 2rem; margin-top: 10px;">$100</p>
+                <button class="btn">ADD TO BAG</button>
             </div>
         </div>
     </div>
@@ -195,20 +198,21 @@
 
         function start() {
             audio.play();
-            document.getElementById('entry').classList.add('hidden');
+            document.getElementById('entry').style.opacity = '0';
+            setTimeout(() => document.getElementById('entry').style.display = 'none', 1000);
         }
 
         function togglePlay() {
             const btn = document.getElementById('play-pause');
-            if (audio.paused) { audio.play(); btn.innerText = 'pause'; } 
-            else { audio.pause(); btn.innerText = 'play'; }
+            if (audio.paused) { audio.play(); btn.innerText = '⏸'; } 
+            else { audio.pause(); btn.innerText = '▶'; }
         }
 
         function skipAudio() { audio.currentTime = 0; audio.play(); }
 
         function toggleMute() {
             audio.muted = !audio.muted;
-            document.getElementById('mute-btn').innerText = audio.muted ? 'off' : 'vol';
+            document.getElementById('mute-btn').innerText = audio.muted ? '🔇' : '🔊';
         }
 
         function updateVolume(val) { audio.volume = val; }
