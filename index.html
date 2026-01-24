@@ -8,25 +8,17 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            width: 100%;
-            min-height: 100vh;
-            background-color: #000;
-            /* Using contain so the full image is visible regardless of screen size */
+            width: 100%; min-height: 100vh; background-color: #000;
             background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
                               url('https://raw.githubusercontent.com/zzzlub/zlub-site/main/IMG_5991.jpg');
-            background-size: contain; 
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
-            color: #fff;
-            font-family: -apple-system, system-ui, sans-serif;
+            background-size: 100% 100%; background-position: center;
+            background-attachment: fixed; background-repeat: no-repeat;
+            color: #fff; font-family: -apple-system, system-ui, sans-serif;
             overflow-x: hidden;
         }
 
-        /* DYNAMIC CHRONO */
+        /* CHRONO & BAG UI */
         #chrono { position: fixed; top: 25px; left: 25px; z-index: 100; font-family: monospace; font-size: 1.1rem; }
-
-        /* BAG UI */
         .cart-icon {
             position: fixed; top: 25px; right: 25px; z-index: 100;
             width: 55px; height: 55px; border-radius: 50%;
@@ -40,47 +32,49 @@
             display: flex; align-items: center; justify-content: center; font-weight: 900;
         }
 
+        /* NEW: MUSIC PLAYER UI */
+        #music-player {
+            position: fixed; bottom: 25px; left: 25px; z-index: 100;
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(15px);
+            padding: 15px 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);
+            display: flex; align-items: center; gap: 15px;
+        }
+        .player-controls { display: flex; gap: 10px; align-items: center; }
+        .p-btn { cursor: pointer; opacity: 0.8; transition: 0.2s; font-size: 14px; }
+        .p-btn:hover { opacity: 1; transform: scale(1.1); }
+        #song-info { font-family: monospace; font-size: 10px; letter-spacing: 1px; width: 120px; overflow: hidden; white-space: nowrap; }
+
         /* SIDEBAR */
         #sidebar {
             position: fixed; top: 0; right: -400px; width: 350px; height: 100%;
             background: rgba(10,10,10,0.98); backdrop-filter: blur(30px);
             z-index: 1000; padding: 40px; transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             border-left: 1px solid rgba(255,255,255,0.1);
-            display: flex; flex-direction: column;
         }
         #sidebar.open { right: 0; }
 
         /* CONTENT */
         .content { position: relative; z-index: 10; padding-top: 30vh; text-align: center; }
-        
+        .hero-title { font-size: 5rem; letter-spacing: -3px; margin-bottom: 10px; }
         .tiers {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 25px; max-width: 1100px; margin: 100px auto; padding: 0 20px;
         }
-
         .card {
             background: rgba(255,255,255,0.05); backdrop-filter: blur(20px);
             padding: 45px 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
-            transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: 0.3s;
         }
-        .card:hover { transform: translateY(-10px); background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.3); }
+        .card:hover { transform: translateY(-10px); background: rgba(255,255,255,0.12); }
+        .btn { margin-top: 25px; width: 100%; padding: 15px; border: none; border-radius: 14px; background: #fff; color: #000; font-weight: 800; cursor: pointer; }
 
-        .btn {
-            margin-top: 25px; width: 100%; padding: 15px; border: none;
-            border-radius: 14px; background: #fff; color: #000;
-            font-weight: 800; cursor: pointer; transition: 0.2s;
-        }
-
-        /* ENTRY OVERLAY WITH SMOOTH TRANSITION */
+        /* ENTRY */
         #entry {
             position: fixed; inset: 0; background: #000; z-index: 9999;
             display: flex; align-items: center; justify-content: center; cursor: pointer;
             transition: opacity 1.2s ease, visibility 1.2s;
         }
-        #entry.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
+        #entry.hidden { opacity: 0; visibility: hidden; }
     </style>
 </head>
 <body>
@@ -96,99 +90,102 @@
         👜
     </div>
 
+    <div id="music-player">
+        <div class="player-controls">
+            <span class="p-btn" onclick="prevSong()">⏮</span>
+            <span class="p-btn" id="play-pause" onclick="togglePlay()">⏸</span>
+            <span class="p-btn" onclick="nextSong()">⏭</span>
+        </div>
+        <div id="song-info">
+            <marquee scrollamount="3" id="current-track">Weiland - Blue Bands</marquee>
+        </div>
+    </div>
+
     <div id="sidebar">
-        <h2 style="margin-bottom: 20px; letter-spacing: -1px;">Your Bag</h2>
-        <div id="item-list" style="flex-grow: 1; overflow-y: auto;">
-            <p style="opacity: 0.3; margin-top: 20px;">Bag is empty...</p>
-        </div>
-        <div style="padding-top: 20px; border-top: 1px solid #333;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                <span>Total</span><span id="total-price">$0</span>
-            </div>
-            <button class="btn" onclick="alert('Proceeding to checkout...')">CHECKOUT</button>
-            <p onclick="toggleSidebar()" style="text-align: center; margin-top: 20px; cursor: pointer; opacity: 0.5; font-size: 11px;">CLOSE</p>
-        </div>
+        <h2 style="margin-bottom: 20px;">Your Bag</h2>
+        <div id="item-list" style="flex-grow: 1;"></div>
+        <button class="btn" onclick="toggleSidebar()">CLOSE</button>
     </div>
 
     <div class="content">
-        <h1 style="font-size: 5rem; letter-spacing: -3px; margin-bottom: 10px;">zzlub</h1>
-        <p style="letter-spacing: 10px; font-size: 10px; opacity: 0.4;">PREMIUM EXPERIENCE</p>
+        <h1 class="hero-title">zzlub</h1>
+        <p style="letter-spacing: 10px; font-size: 10px; opacity: 0.6;">LARP SERIES ACCESS</p>
 
         <div class="tiers">
             <div class="card" style="border-top: 4px solid #cd7f32;">
-                <h3>BRONZE</h3><p style="font-size: 2rem; margin: 15px 0;">$30</p>
-                <button class="btn" onclick="addToBag('Bronze', 30)">ADD TO BAG</button>
+                <h3>LARPBRONZE</h3><p style="font-size: 2rem; margin: 15px 0;">$30</p>
+                <button class="btn" onclick="addToBag('LarpBronze', 30)">ADD TO BAG</button>
             </div>
             <div class="card" style="border-top: 4px solid #c0c0c0;">
-                <h3>SILVER</h3><p style="font-size: 2rem; margin: 15px 0;">$50</p>
-                <button class="btn" onclick="addToBag('Silver', 50)">ADD TO BAG</button>
+                <h3>LARPSILVER</h3><p style="font-size: 2rem; margin: 15px 0;">$50</p>
+                <button class="btn" onclick="addToBag('LarpSilver', 50)">ADD TO BAG</button>
             </div>
             <div class="card" style="border-top: 4px solid #ffd700;">
-                <h3>GOLD</h3><p style="font-size: 2rem; margin: 15px 0;">$75</p>
-                <button class="btn" onclick="addToBag('Gold', 75)">ADD TO BAG</button>
+                <h3>LARPGOLD</h3><p style="font-size: 2rem; margin: 15px 0;">$75</p>
+                <button class="btn" onclick="addToBag('LarpGold', 75)">ADD TO BAG</button>
             </div>
             <div class="card" style="border-top: 4px solid #a333ff;">
-                <h3>ULTRA</h3><p style="font-size: 2rem; margin: 15px 0;">$100</p>
-                <button class="btn" onclick="addToBag('Ultra', 100)">ADD TO BAG</button>
+                <h3>LARPULTRA</h3><p style="font-size: 2rem; margin: 15px 0;">$100</p>
+                <button class="btn" onclick="addToBag('LarpUltra', 100)">ADD TO BAG</button>
             </div>
         </div>
     </div>
 
-    <audio id="music" loop>
-        <source src="https://raw.githubusercontent.com/zzzlub/zlub-site/main/Weiland%20-%20Blue%20Bands%20-%20saucegodest%20-%20SoundLoadMate.com.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="audio-player" onended="nextSong()"></audio>
 
     <script>
-        let bag = [];
-        let total = 0;
+        // PLAYLIST CONFIG
+        const playlist = [
+            { title: "Weiland - Blue Bands", url: "https://raw.githubusercontent.com/zzzlub/zlub-site/main/Weiland%20-%20Blue%20Bands%20-%20saucegodest%20-%20SoundLoadMate.com.mp3" },
+            { title: "Track 02 - Add Name", url: "LINK_HERE" },
+            { title: "Track 03 - Add Name", url: "LINK_HERE" }
+        ];
 
-        function updateTime() {
-            const now = new Date();
-            document.getElementById('chrono').innerText = now.toLocaleTimeString();
-        }
-        setInterval(updateTime, 1000);
+        let currentSongIndex = 0;
+        const audio = document.getElementById('audio-player');
+        const playBtn = document.getElementById('play-pause');
 
         function start() {
-            document.getElementById('music').play();
+            loadSong(0);
+            audio.play();
             document.getElementById('entry').classList.add('hidden');
         }
 
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
+        function loadSong(index) {
+            currentSongIndex = index;
+            audio.src = playlist[index].url;
+            document.getElementById('current-track').innerText = playlist[index].title;
         }
 
+        function togglePlay() {
+            if (audio.paused) { audio.play(); playBtn.innerText = "⏸"; }
+            else { audio.pause(); playBtn.innerText = "▶"; }
+        }
+
+        function nextSong() {
+            currentSongIndex = (currentSongIndex + 1) % playlist.length;
+            loadSong(currentSongIndex);
+            audio.play();
+            playBtn.innerText = "⏸";
+        }
+
+        function prevSong() {
+            currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
+            loadSong(currentSongIndex);
+            audio.play();
+            playBtn.innerText = "⏸";
+        }
+
+        // BAG & TIME LOGIC
+        let bag = [];
+        function updateTime() { document.getElementById('chrono').innerText = new Date().toLocaleTimeString(); }
+        setInterval(updateTime, 1000);
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
         function addToBag(name, price) {
-            bag.push({name, price});
-            total += price;
-            renderBag();
-            if(!document.getElementById('sidebar').classList.contains('open')) {
-                toggleSidebar();
-            }
-        }
-
-        function renderBag() {
-            const list = document.getElementById('item-list');
-            const count = document.getElementById('cart-count');
-            const totalDisplay = document.getElementById('total-price');
-            count.innerText = bag.length;
-            totalDisplay.innerText = "$" + total;
-
-            if (bag.length === 0) {
-                list.innerHTML = `<p style="opacity: 0.3; margin-top: 20px;">Bag is empty...</p>`;
-            } else {
-                list.innerHTML = bag.map((item, index) => `
-                    <div style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                        <div><p style="font-weight: 700;">${item.name}</p><p style="font-size: 12px; opacity: 0.5;">$${item.price}</p></div>
-                        <span onclick="removeItem(${index})" style="color: #ff0050; font-size: 10px; cursor: pointer; align-self: center;">REMOVE</span>
-                    </div>
-                `).join('');
-            }
-        }
-
-        function removeItem(index) {
-            total -= bag[index].price;
-            bag.splice(index, 1);
-            renderBag();
+            bag.push(name);
+            document.getElementById('cart-count').innerText = bag.length;
+            toggleSidebar();
         }
     </script>
 </body>
