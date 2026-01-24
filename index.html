@@ -14,10 +14,11 @@
             overflow-x: hidden;
         }
 
-        /* THE BACKGROUND FIX */
+        /* FIXED BACKGROUND LAYER */
         .bg-layer {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -5; background: #000;
+            z-index: -10; /* Sent to the absolute back */
+            background: #000;
         }
         #bgImage {
             width: 100%; height: 100%; object-fit: cover;
@@ -25,16 +26,15 @@
         }
         .overlay-tint {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.45); z-index: -4;
+            background: rgba(0,0,0,0.45); z-index: -9;
         }
 
-        /* DYNAMIC WATCH FACE */
+        /* DYNAMIC CHRONO */
         #chrono {
             position: fixed; top: 25px; left: 25px; z-index: 100;
-            font-family: monospace; text-align: left;
+            font-family: monospace;
         }
-        #chrono-time { font-size: 1.2rem; font-weight: 800; letter-spacing: 2px; }
-        #chrono-ms { font-size: 0.8rem; opacity: 0.6; }
+        #chrono-time { font-size: 1.2rem; font-weight: 800; letter-spacing: 2px; color: rgba(255,255,255,0.8); }
 
         /* CART UI */
         .cart-icon {
@@ -44,34 +44,55 @@
             display: flex; justify-content: center; align-items: center;
             cursor: pointer; border: 1px solid rgba(255, 255, 255, 0.2); 
         }
-
-        /* MAIN CARDS */
-        .main-content { position: relative; z-index: 10; }
-        .hero { height: 100vh; display: flex; justify-content: center; align-items: center; }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px);
-            padding: 50px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.2);
-            text-align: center;
+        #cart-count {
+            position: absolute; top: -2px; right: -2px; background: #ff0050;
+            font-size: 11px; min-width: 20px; height: 20px; border-radius: 10px;
+            display: flex; justify-content: center; align-items: center; font-weight: 900;
         }
 
+        #cart-sidebar {
+            position: fixed; top: 0; right: -400px; width: 350px; height: 100%;
+            background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(30px);
+            z-index: 1000; padding: 50px 30px; transition: 0.5s ease;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        #cart-sidebar.open { right: 0; }
+
+        /* CONTENT */
+        .main-content { position: relative; z-index: 1; }
+        .hero { height: 100vh; display: flex; justify-content: center; align-items: center; }
+        
         .tiers-section {
             padding: 80px 20px; display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 25px; max-width: 1200px; margin: 0 auto;
         }
+
         .tier-card {
             background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px);
             padding: 40px; border-radius: 28px; text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1); transition: 0.3s;
         }
-        .tier-card:hover { transform: translateY(-10px); background: rgba(255,255,255,0.08); }
+
+        /* COLORS RESTORED */
+        .bronze { border-top: 5px solid #cd7f32; }
+        .silver { border-top: 5px solid #c0c0c0; }
+        .gold { border-top: 5px solid #ffd700; }
+        .ultra { border-top: 5px solid #a333ff; }
 
         .cart-btn {
             width: 100%; padding: 15px; border-radius: 12px; border: none;
             background: #fff; color: #000; font-weight: 800; cursor: pointer;
-            margin-top: 20px;
+            margin-top: 20px; transition: 0.2s;
         }
+        .cart-btn:hover { transform: scale(1.03); background: #eee; }
+
+        #toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: #fff; color: #000; padding: 12px 25px; border-radius: 50px;
+            font-weight: 700; z-index: 2000; transition: 0.4s;
+        }
+        #toast.show { transform: translateX(-50%) translateY(0); }
 
         #entry-overlay {
             position: fixed; inset: 0; background: #000; z-index: 9999;
@@ -85,30 +106,53 @@
         <p style="letter-spacing: 5px; font-size: 12px;">TAP TO ENTER</p>
     </div>
 
+    <div id="toast">ADDED TO BAG</div>
+
     <div id="chrono">
-        <div id="chrono-time">00:00:00<span id="chrono-ms">.00</span></div>
+        <div id="chrono-time">00:00:00</div>
     </div>
 
-    <div class="cart-icon">👜</div>
+    <div class="cart-icon" onclick="toggleCart()">
+        <span id="cart-count">0</span>
+        👜
+    </div>
+
+    <div id="cart-sidebar">
+        <h2 style="margin-bottom: 30px;">Your Bag</h2>
+        <div id="cart-items" style="flex-grow: 1; overflow-y: auto;"></div>
+        <button class="cart-btn" onclick="toggleCart()" style="background: transparent; color: #fff; border: 1px solid #444;">CLOSE</button>
+    </div>
 
     <div class="bg-layer">
-        <img id="bgImage" src="https://raw.githubusercontent.com/zzzlub/zlub-site/refs/heads/main/IMG_5991.jpg">
+        <img id="bgImage" src="https://raw.githubusercontent.com/zzzlub/zlub-site/refs/heads/main/IMG_5991.jpg" crossorigin="anonymous">
     </div>
     <div class="overlay-tint"></div>
 
     <div class="main-content">
         <section class="hero">
-            <div class="glass-card">
-                <h1 style="font-size: 3rem; letter-spacing: -1px;">zzlub</h1>
-                <p style="opacity: 0.5; letter-spacing: 3px; font-size: 10px; margin-top: 10px;">TEAM COMING SOON</p>
+            <div style="text-align: center;">
+                <h1 style="font-size: 4rem; letter-spacing: -2px;">zzlub</h1>
+                <p style="opacity: 0.5; letter-spacing: 5px; font-size: 10px;">PREMIUM ACCESS</p>
             </div>
         </section>
 
         <section class="tiers-section">
-            <div class="tier-card"><h3>BRONZE</h3><p>$30</p><button class="cart-btn">ADD TO BAG</button></div>
-            <div class="tier-card"><h3>SILVER</h3><p>$50</p><button class="cart-btn">ADD TO BAG</button></div>
-            <div class="tier-card"><h3>GOLD</h3><p>$75</p><button class="cart-btn">ADD TO BAG</button></div>
-            <div class="tier-card"><h3>ULTRA</h3><p>$100</p><button class="cart-btn">ADD TO BAG</button></div>
+            <div class="tier-card bronze">
+                <h3>BRONZE</h3><p style="font-size: 2rem; margin: 10px 0;">$30</p>
+                <button class="cart-btn" onclick="addToCart('Bronze', 30)">ADD TO BAG</button>
+            </div>
+            <div class="tier-card silver">
+                <h3>SILVER</h3><p style="font-size: 2rem; margin: 10px 0;">$50</p>
+                <button class="cart-btn" onclick="addToCart('Silver', 50)">ADD TO BAG</button>
+            </div>
+            <div class="tier-card gold">
+                <h3>GOLD</h3><p style="font-size: 2rem; margin: 10px 0;">$75</p>
+                <button class="cart-btn" onclick="addToCart('Gold', 75)">ADD TO BAG</button>
+            </div>
+            <div class="tier-card ultra">
+                <h3>ULTRA</h3><p style="font-size: 2rem; margin: 10px 0;">$100</p>
+                <button class="cart-btn" onclick="addToCart('Ultra', 100)">ADD TO BAG</button>
+            </div>
         </section>
     </div>
 
@@ -117,26 +161,39 @@
     </audio>
 
     <script>
+        let cartCount = 0;
+
         function updateClock() {
             const now = new Date();
-            const h = String(now.getHours()).padStart(2, '0');
-            const m = String(now.getMinutes()).padStart(2, '0');
-            const s = String(now.getSeconds()).padStart(2, '0');
-            const ms = String(Math.floor(now.getMilliseconds() / 10)).padStart(2, '0');
-            document.getElementById('chrono-time').innerHTML = `${h}:${m}:${s}<span id="chrono-ms">.${ms}</span>`;
+            document.getElementById('chrono-time').innerText = now.toLocaleTimeString();
         }
-        setInterval(updateClock, 10);
+        setInterval(updateClock, 1000);
 
         function startSite() {
-            document.getElementById('player').play();
-            document.getElementById('entry-overlay').style.display = 'none';
+            const p = document.getElementById('player');
+            p.currentTime = 20;
+            p.play();
+            document.getElementById('entry-overlay').style.opacity = '0';
+            setTimeout(() => document.getElementById('entry-overlay').style.display = 'none', 800);
+        }
+
+        function addToCart(name, price) {
+            cartCount++;
+            document.getElementById('cart-count').innerText = cartCount;
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        function toggleCart() {
+            document.getElementById('cart-sidebar').classList.toggle('open');
         }
 
         window.addEventListener('scroll', () => {
             const bg = document.getElementById('bgImage');
             const scroll = window.scrollY;
             bg.style.transform = `scale(${1 + scroll/5000})`;
-            bg.style.filter = `blur(${Math.min(scroll/100, 15)}px)`;
+            bg.style.filter = `blur(${Math.min(scroll/80, 15)}px)`;
         });
     </script>
 </body>
