@@ -7,88 +7,87 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
+        /* Force the body to be transparent so it doesn't block the image */
         body, html { 
-            width: 100%; min-height: 100vh; 
-            background-color: #000; color: #fff;
+            width: 100%; height: 100%; 
+            background: #000; /* Fallback */
+            color: #fff;
             font-family: -apple-system, system-ui, sans-serif;
-            overflow-x: hidden;
         }
 
-        /* DYNAMIC BACKGROUND ENGINE */
-        #bg-canvas {
+        /* THE BACKGROUND LAYER - Forced to the bottom */
+        #bg-container {
             position: fixed;
-            top: 50%; left: 50%;
-            width: 100vmax; height: 100vmax; /* Ensures coverage during rotation */
+            top: 0; left: 0;
+            width: 100vw;
+            height: 100vh;
             z-index: -2;
+            overflow: hidden;
+            background: #000;
+        }
+
+        #bg-image {
+            width: 100%;
+            height: 100%;
             background-image: url('https://raw.githubusercontent.com/zzzlub/zlub-site/main/IMG_5991.jpg');
             background-repeat: no-repeat;
             background-position: center;
-            transform: translate(-50%, -50%); /* Keeps it centered */
-            background-size: cover;
+            /* This is the key: 100% 100% forces the stretch */
+            background-size: 100% 100%; 
+            transition: transform 0.5s ease;
         }
 
-        /* Desktop: Rotate 90deg */
+        /* DESKTOP ROTATION */
         @media (min-width: 769px) {
-            #bg-canvas { transform: translate(-50%, -50%) rotate(90deg); }
+            #bg-image {
+                /* Rotate and force dimensions to swap to maintain full coverage */
+                transform: rotate(90deg);
+                width: 100vh; 
+                height: 100vw;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin-top: -50vw;
+                margin-left: -50vh;
+            }
         }
 
-        /* Mobile: No rotation, No fade */
-        @media (max-width: 768px) {
-            #bg-canvas { transform: translate(-50%, -50%) rotate(0deg); }
-        }
-
+        /* Subtle tint so you can still read the text */
         .overlay-tint {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.45); z-index: -1;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.3); /* Lowered opacity to make image clearer */
+            z-index: -1;
             pointer-events: none;
         }
 
-        /* UI ELEMENTS */
-        #chrono { position: fixed; top: 25px; left: 25px; z-index: 100; font-family: monospace; letter-spacing: 2px; }
+        /* UI & CONTENT */
+        #chrono { position: fixed; top: 25px; left: 25px; z-index: 100; font-family: monospace; }
+        .cart-icon { position: fixed; top: 25px; right: 25px; z-index: 100; cursor: pointer; }
         
-        .cart-icon {
-            position: fixed; top: 25px; right: 25px; z-index: 100;
-            width: 55px; height: 55px; border-radius: 50%;
-            background: rgba(255,255,255,0.1); backdrop-filter: blur(15px);
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; border: 1px solid rgba(255,255,255,0.2);
-        }
+        .content { position: relative; z-index: 1; padding-top: 30vh; text-align: center; }
+        .hero-title { font-size: clamp(3rem, 10vw, 5rem); letter-spacing: -3px; }
 
-        #cart-count {
-            position: absolute; top: -5px; right: -5px; background: #ff0050;
-            font-size: 11px; width: 22px; height: 22px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-weight: 900;
-        }
-
-        #sidebar {
-            position: fixed; top: 0; right: -400px; width: 320px; height: 100%;
-            background: rgba(10,10,10,0.98); backdrop-filter: blur(30px);
-            z-index: 1000; padding: 40px; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            border-left: 1px solid rgba(255,255,255,0.1);
-        }
-        #sidebar.open { right: 0; }
-
-        /* CONTENT */
-        .content { position: relative; z-index: 1; padding-top: 35vh; text-align: center; }
-        .hero-title { font-size: 5rem; letter-spacing: -3px; margin-bottom: 5px; text-shadow: 0 0 30px rgba(0,0,0,0.5); }
-        
         .tiers {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 25px; max-width: 1200px; margin: 80px auto; padding: 0 20px;
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px; max-width: 1100px; margin: 50px auto; padding: 20px;
         }
 
         .card {
-            background: rgba(255,255,255,0.05); backdrop-filter: blur(20px);
-            padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
-            transition: 0.3s;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            padding: 40px; border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.1); }
-        .btn { margin-top: 25px; width: 100%; padding: 15px; border: none; border-radius: 12px; background: #fff; font-weight: 800; cursor: pointer; }
+
+        .btn { width: 100%; padding: 15px; margin-top: 20px; cursor: pointer; font-weight: 800; border-radius: 10px; border: none; }
 
         #entry {
             position: fixed; inset: 0; background: #000; z-index: 9999;
             display: flex; align-items: center; justify-content: center; cursor: pointer;
-            transition: opacity 1s ease;
+            transition: opacity 0.8s;
         }
         #entry.hidden { opacity: 0; pointer-events: none; }
     </style>
@@ -96,76 +95,38 @@
 <body>
 
     <div id="entry" onclick="start()">
-        <p style="letter-spacing: 5px; font-size: 11px; font-family: monospace;">TAP TO ENTER</p>
+        <p style="letter-spacing: 5px; font-size: 11px;">TAP TO ENTER</p>
     </div>
 
-    <div id="bg-canvas"></div>
+    <div id="bg-container">
+        <div id="bg-image"></div>
+    </div>
     <div class="overlay-tint"></div>
 
     <div id="chrono">00:00:00</div>
-
-    <div class="cart-icon" onclick="toggleBag()">
-        <div id="cart-count">0</div>
-        👜
-    </div>
-
-    <div id="sidebar">
-        <h2 style="margin-bottom: 30px;">Your Bag</h2>
-        <div id="bag-items"></div>
-        <button class="btn" style="margin-top: 40px;" onclick="toggleBag()">CLOSE</button>
-    </div>
+    <div class="cart-icon">👜</div>
 
     <div class="content">
         <h1 class="hero-title">zzlub</h1>
-        <p style="letter-spacing: 12px; font-size: 10px; opacity: 0.6; margin-bottom: 50px;">LARP SERIES</p>
+        <p style="letter-spacing: 10px; font-size: 10px; opacity: 0.6;">LARP SERIES</p>
 
         <div class="tiers">
-            <div class="card" style="border-top: 4px solid #cd7f32;">
-                <h3>LARPBRONZE</h3><p style="font-size: 1.8rem; margin-top: 10px;">$30</p>
-                <button class="btn" onclick="addToBag('LarpBronze', 30)">ADD TO BAG</button>
-            </div>
-            <div class="card" style="border-top: 4px solid #c0c0c0;">
-                <h3>LARPSILVER</h3><p style="font-size: 1.8rem; margin-top: 10px;">$50</p>
-                <button class="btn" onclick="addToBag('LarpSilver', 50)">ADD TO BAG</button>
-            </div>
-            <div class="card" style="border-top: 4px solid #ffd700;">
-                <h3>LARPGOLD</h3><p style="font-size: 1.8rem; margin-top: 10px;">$75</p>
-                <button class="btn" onclick="addToBag('LarpGold', 75)">ADD TO BAG</button>
-            </div>
-            <div class="card" style="border-top: 4px solid #a333ff;">
-                <h3>LARPULTRA</h3><p style="font-size: 1.8rem; margin-top: 10px;">$100</p>
-                <button class="btn" onclick="addToBag('LarpUltra', 100)">ADD TO BAG</button>
-            </div>
+            <div class="card"><h3>LARPBRONZE</h3><p>$30</p><button class="btn">ADD TO BAG</button></div>
+            <div class="card"><h3>LARPSILVER</h3><p>$50</p><button class="btn">ADD TO BAG</button></div>
+            <div class="card"><h3>LARPGOLD</h3><p>$75</p><button class="btn">ADD TO BAG</button></div>
+            <div class="card"><h3>LARPULTRA</h3><p>$100</p><button class="btn">ADD TO BAG</button></div>
         </div>
     </div>
 
-    <audio id="audio-player" loop src="https://raw.githubusercontent.com/zzzlub/zlub-site/main/Weiland%20-%20Blue%20Bands%20-%20saucegodest%20-%20SoundLoadMate.com.mp3"></audio>
+    <audio id="music" loop src="https://raw.githubusercontent.com/zzzlub/zlub-site/main/Weiland%20-%20Blue%20Bands%20-%20saucegodest%20-%20SoundLoadMate.com.mp3"></audio>
 
     <script>
-        const audio = document.getElementById('audio-player');
-        let bag = [];
-
         function start() {
-            audio.play();
+            document.getElementById('music').play();
             document.getElementById('entry').classList.add('hidden');
         }
-
-        function toggleBag() { document.getElementById('sidebar').classList.toggle('open'); }
-
-        function addToBag(name, price) {
-            bag.push({name, price});
-            document.getElementById('cart-count').innerText = bag.length;
-            const list = document.getElementById('bag-items');
-            list.innerHTML = bag.map(item => `
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px;">
-                    <span>${item.name}</span><span>$${item.price}</span>
-                </div>
-            `).join('');
-            if(!document.getElementById('sidebar').classList.contains('open')) toggleBag();
-        }
-
-        setInterval(() => { 
-            document.getElementById('chrono').innerText = new Date().toLocaleTimeString(); 
+        setInterval(() => {
+            document.getElementById('chrono').innerText = new Date().toLocaleTimeString();
         }, 1000);
     </script>
 </body>
