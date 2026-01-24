@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>zzlub</title>
     <style>
-        /* Essential Reset */
+        /* 1. Reset everything to stop black gaps */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body, html { 
@@ -14,43 +14,43 @@
             font-family: -apple-system, system-ui, sans-serif; 
             background-color: #000;
             color: #fff;
+            /* Allow scrolling only after enter */
             overflow-x: hidden;
-            overflow-y: hidden; /* Locked until Tap */
-        }
-        
-        /* THE BACKGROUND - Restored to the logic that worked for you */
-        .background {
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100vw; 
-            height: 100vh;
-            background-image: url('https://raw.githubusercontent.com/zzzlub/zlub-site/main/IMG_5991.HEIC');
-            background-size: cover; 
-            background-position: center; 
-            background-repeat: no-repeat;
-            z-index: -1;
+            overflow-y: hidden; 
         }
 
-        /* Darkening layer so text is readable over the watches */
-        .dimmer {
+        /* 2. THE BACKGROUND - Exactly the version that worked for you */
+        .background {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('https://raw.githubusercontent.com/zzzlub/zlub-site/main/IMG_5991.HEIC');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -2; /* Set to the very bottom */
+        }
+
+        /* Darkening layer so you can read the text */
+        .overlay-dim {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             background: rgba(0,0,0,0.3);
-            z-index: 0;
+            z-index: -1;
         }
 
-        /* Scrollable content layer */
-        .content {
+        /* 3. SCROLLING CONTENT */
+        .main-container {
             position: relative;
-            z-index: 10;
+            z-index: 1; /* Sits above the fixed background */
             width: 100%;
         }
 
-        /* First View: Hero Section */
         .hero {
             height: 100vh;
             display: flex;
@@ -58,6 +58,7 @@
             align-items: center;
         }
 
+        /* The Card with Shimmer & Fade */
         .card {
             background: rgba(255, 255, 255, 0.1); 
             backdrop-filter: blur(20px); 
@@ -73,7 +74,6 @@
 
         .card.active { opacity: 1; transform: translateY(0); }
 
-        /* Shimmering Text */
         h1 {
             font-size: 1.8rem;
             font-weight: 700;
@@ -86,7 +86,6 @@
             -webkit-text-fill-color: transparent;
             animation: shine 4s linear infinite;
         }
-
         @keyframes shine { to { background-position: 200% center; } }
 
         .tiktok-link {
@@ -97,22 +96,21 @@
             padding: 12px 30px;
             border-radius: 12px;
             font-weight: 600;
-            transition: 0.3s;
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        /* Payment Tiers Grid */
+        /* 4. PRICING SECTION */
         .tiers-section {
-            padding: 60px 20px;
+            padding: 80px 20px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 20px;
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
         .tier-card {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             padding: 30px;
@@ -124,20 +122,28 @@
         .tier-name { font-weight: 800; font-size: 1.2rem; margin-bottom: 10px; }
         .tier-price { font-size: 2rem; font-weight: 300; margin-bottom: 20px; }
         
-        .bronze { border-top: 4px solid #cd7f32; }
-        .silver { border-top: 4px solid #c0c0c0; }
-        .gold { border-top: 4px solid #ffd700; }
-        .ultra { border-top: 4px solid #a333ff; }
+        .bronze { border-top: 5px solid #cd7f32; }
+        .silver { border-top: 5px solid #c0c0c0; }
+        .gold { border-top: 5px solid #ffd700; }
+        .ultra { border-top: 5px solid #a333ff; }
 
         .cart-btn {
-            width: 100%; padding: 12px; border-radius: 10px; border: none;
-            background: #fff; color: #000; font-weight: 700; cursor: pointer;
+            width: 100%; 
+            padding: 14px; 
+            border-radius: 12px; 
+            border: none;
+            background: #fff; 
+            color: #000; 
+            font-weight: 700; 
+            cursor: pointer;
+            z-index: 50; /* Ensure button is on top */
+            position: relative;
         }
 
-        /* Enter Overlay */
+        /* TAP TO ENTER OVERLAY */
         #overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 999; display: flex; 
+            background: #000; z-index: 9999; display: flex; 
             justify-content: center; align-items: center; cursor: pointer;
             transition: opacity 0.8s ease;
         }
@@ -150,14 +156,14 @@
     </div>
 
     <div class="background"></div>
-    <div class="dimmer"></div>
+    <div class="overlay-dim"></div>
 
-    <div class="content">
+    <div class="main-container">
         <section class="hero">
             <div class="card" id="mainCard">
                 <h1>Team coming soon...</h1>
                 <a href="https://www.tiktok.com/@zzzlub?_r=1&_t=ZN-93K97bcFoFa" target="_blank" class="tiktok-link">TikTok</a>
-                <p style="margin-top: 30px; font-size: 10px; opacity: 0.5; letter-spacing: 2px;">SCROLL DOWN</p>
+                <p style="margin-top: 40px; font-size: 10px; opacity: 0.5; letter-spacing: 2px;">SCROLL FOR TIERS</p>
             </div>
         </section>
 
@@ -165,25 +171,25 @@
             <div class="tier-card bronze">
                 <p class="tier-name">LarpBronze</p>
                 <p class="tier-price">$30</p>
-                <button class="cart-btn">Add to Cart</button>
+                <button class="cart-btn" onclick="alert('Added to cart!')">Add to Cart</button>
             </div>
             <div class="tier-card silver">
                 <p class="tier-name">LarpSilver</p>
                 <p class="tier-price">$50</p>
-                <button class="cart-btn">Add to Cart</button>
+                <button class="cart-btn" onclick="alert('Added to cart!')">Add to Cart</button>
             </div>
             <div class="tier-card gold">
                 <p class="tier-name">LarpGold</p>
                 <p class="tier-price">$75</p>
-                <button class="cart-btn">Add to Cart</button>
+                <button class="cart-btn" onclick="alert('Added to cart!')">Add to Cart</button>
             </div>
             <div class="tier-card ultra">
                 <p class="tier-name">LarpUltra</p>
                 <p class="tier-price">$100</p>
-                <button class="cart-btn">Add to Cart</button>
+                <button class="cart-btn" onclick="alert('Added to cart!')">Add to Cart</button>
             </div>
         </section>
-        
+
         <div style="height: 100px;"></div>
     </div>
 
@@ -197,14 +203,15 @@
             const overlay = document.getElementById('overlay');
             const card = document.getElementById('mainCard');
             
-            audio.currentTime = 20; // Start at 20 seconds
+            audio.currentTime = 20;
             audio.play().then(() => {
                 overlay.style.opacity = '0';
-                document.body.style.overflowY = "auto"; // Enable scrolling
+                // Unlock scrolling
+                document.body.style.overflowY = "auto"; 
                 setTimeout(() => {
-                    overlay.style.display = 'none';
-                    card.classList.add('active'); // Start Fade and Shimmer
-                }, 400);
+                    overlay.style.display = 'none'; // REMOVES it so you can click buttons
+                    card.classList.add('active');
+                }, 800);
             }).catch(err => {
                 document.body.style.overflowY = "auto";
                 overlay.style.display = 'none';
