@@ -14,35 +14,34 @@
             overflow-x: hidden; overflow-y: hidden;
         }
 
-        /* 1. BACKGROUND FIX WITH YOUR RAW LINK */
+        /* THE FINAL BACKGROUND FIX */
         .bg-layer {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: -5; background: #000;
         }
 
         #bgImage {
-            width: 100%; height: 100%; object-fit: cover;
-            /* Direct Raw Link Applied */
-            content: url('https://raw.githubusercontent.com/zzzlub/zlub-site/refs/heads/main/IMG_5991.jpg');
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%; 
+            object-fit: cover;
+            display: block; /* Ensures it's not hidden */
             transition: transform 0.3s ease-out, filter 0.4s ease;
         }
 
         .overlay-tint {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4); z-index: -4;
+            background: rgba(0,0,0,0.45); z-index: -4;
         }
 
-        /* 2. CART UI */
+        /* UI ELEMENTS */
         .cart-icon {
             position: fixed; top: 25px; right: 25px; z-index: 100;
             background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
             width: 55px; height: 55px; border-radius: 50%; 
             display: flex; justify-content: center; align-items: center;
             cursor: pointer; border: 1px solid rgba(255, 255, 255, 0.2); 
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .cart-icon:hover { transform: scale(1.1); background: rgba(255,255,255,0.2); }
         
         #cart-count {
             position: absolute; top: -2px; right: -2px; background: #ff0050;
@@ -51,55 +50,33 @@
             align-items: center; font-weight: 900; border: 2px solid #000;
         }
 
+        #toast-notification {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: #fff; color: #000; padding: 12px 25px;
+            border-radius: 50px; font-weight: 700; font-size: 13px; z-index: 2000;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #toast-notification.show { transform: translateX(-50%) translateY(0); }
+
         #cart-sidebar {
             position: fixed; top: 0; right: -400px; width: 350px; height: 100%;
             background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            z-index: 1000; padding: 50px 30px; transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            z-index: 1000; padding: 50px 30px; transition: 0.5s ease;
             border-left: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex; flex-direction: column;
         }
         #cart-sidebar.open { right: 0; }
-        
-        #cart-items { flex-grow: 1; overflow-y: auto; margin: 20px 0; }
-        .cart-item { display: flex; justify-content: space-between; padding-bottom: 15px; border-bottom: 1px solid #222; margin-bottom: 15px; }
 
-        /* 3. BUTTONS & HOVER GLOW */
-        .tiers-section {
-            padding: 80px 20px; display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 25px; max-width: 1200px; margin: 0 auto;
-        }
-        .tier-card {
-            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px);
-            padding: 40px 30px; border-radius: 28px; text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .cart-btn {
-            width: 100%; padding: 15px; border-radius: 14px; border: none;
-            color: #fff; font-weight: 800; cursor: pointer; 
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            text-transform: uppercase;
-        }
-        .cart-btn:hover { transform: scale(1.08); } /* Hover Zoom */
+        /* TIERS */
+        .tiers-section { padding: 80px 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
+        .tier-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); padding: 40px 30px; border-radius: 28px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .cart-btn { width: 100%; padding: 15px; border-radius: 14px; border: none; color: #fff; font-weight: 800; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
 
         .bronze { border-top: 5px solid #cd7f32; } .bronze .cart-btn { background: #cd7f32; }
-        .bronze .cart-btn:hover { box-shadow: 0 0 25px rgba(205, 127, 50, 0.7); } /* Glow */
-
         .silver { border-top: 5px solid #c0c0c0; } .silver .cart-btn { background: #7a7a7a; }
-        .silver .cart-btn:hover { box-shadow: 0 0 25px rgba(192, 192, 192, 0.7); }
-
         .gold { border-top: 5px solid #ffd700; } .gold .cart-btn { background: #ffd700; color: #000; }
-        .gold .cart-btn:hover { box-shadow: 0 0 25px rgba(255, 215, 0, 0.7); }
-
         .ultra { border-top: 5px solid #a333ff; } .ultra .cart-btn { background: #a333ff; }
-        .ultra .cart-btn:hover { box-shadow: 0 0 25px rgba(163, 51, 255, 0.7); }
 
-        #overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 9999; display: flex; 
-            justify-content: center; align-items: center; cursor: pointer;
-        }
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -108,62 +85,47 @@
         <p style="color: white; letter-spacing: 5px; font-size: 11px;">TAP TO ENTER</p>
     </div>
 
+    <div id="toast-notification">ADDED TO BAG</div>
+
     <div class="cart-icon" onclick="toggleCart()">
         <span style="font-size: 20px;">👜</span>
         <span id="cart-count">0</span>
     </div>
 
     <div id="cart-sidebar">
-        <h2 style="font-size: 2rem;">Bag</h2>
-        <div id="cart-items"></div>
+        <h2 style="margin-bottom: 20px;">Bag</h2>
+        <div id="cart-items" style="flex-grow: 1; overflow-y: auto;"></div>
         <div style="padding-top: 20px;">
             <div style="display: flex; justify-content: space-between; font-size: 1.4rem; font-weight: 700; margin-bottom: 20px;">
                 <span>Total</span><span id="total-val">$0</span>
             </div>
-            <button class="cart-btn" style="background:#fff; color:#000;" onclick="alert('Checkout coming soon!')">Checkout</button>
+            <button class="cart-btn" style="background:#fff; color:#000;" onclick="alert('Checkout integration ready.')">Checkout</button>
             <p onclick="toggleCart()" style="text-align: center; margin-top: 25px; cursor: pointer; opacity: 0.4; font-size: 12px;">CLOSE</p>
         </div>
     </div>
 
-    <div class="bg-layer"><img id="bgImage" alt="watches"></div>
+    <div class="bg-layer">
+        <img id="bgImage" src="https://raw.githubusercontent.com/zzzlub/zlub-site/refs/heads/main/IMG_5991.jpg" alt="Rolex Watches">
+    </div>
     <div class="overlay-tint"></div>
 
     <div class="main-content">
         <section style="height: 100vh; display: flex; justify-content: center; align-items: center;">
-            <div id="mainCard" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 40px; border-radius: 24px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.2); opacity: 0; transform: translateY(20px); transition: 1.5s ease;">
-                <h1 style="font-size: 1.8rem;">Team coming soon...</h1>
+            <div id="mainCard" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); padding: 40px; border-radius: 24px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.2); opacity: 0; transform: translateY(20px); transition: 1.5s ease;">
+                <h1>Team coming soon...</h1>
                 <p style="margin-top: 40px; font-size: 10px; opacity: 0.5; letter-spacing: 3px;">SCROLL TO BROWSE</p>
             </div>
         </section>
 
         <section class="tiers-section">
-            <div class="tier-card bronze">
-                <p style="opacity: 0.6; font-size: 12px; font-weight: 800;">BRONZE</p>
-                <p style="font-size: 2.2rem; margin: 15px 0 30px;">$30</p>
-                <button class="cart-btn" onclick="addToCart('Bronze', 30)">Add to Bag</button>
-            </div>
-            <div class="tier-card silver">
-                <p style="opacity: 0.6; font-size: 12px; font-weight: 800;">SILVER</p>
-                <p style="font-size: 2.2rem; margin: 15px 0 30px;">$50</p>
-                <button class="cart-btn" onclick="addToCart('Silver', 50)">Add to Bag</button>
-            </div>
-            <div class="tier-card gold">
-                <p style="opacity: 0.6; font-size: 12px; font-weight: 800;">GOLD</p>
-                <p style="font-size: 2.2rem; margin: 15px 0 30px;">$75</p>
-                <button class="cart-btn" onclick="addToCart('Gold', 75)">Add to Bag</button>
-            </div>
-            <div class="tier-card ultra">
-                <p style="opacity: 0.6; font-size: 12px; font-weight: 800;">ULTRA</p>
-                <p style="font-size: 2.2rem; margin: 15px 0 30px;">$100</p>
-                <button class="cart-btn" onclick="addToCart('Ultra', 100)">Add to Bag</button>
-            </div>
+            <div class="tier-card bronze"><p style="font-size: 12px; font-weight: 800;">BRONZE</p><p style="font-size: 2.2rem; margin: 15px 0 30px;">$30</p><button class="cart-btn" onclick="addToCart('Bronze', 30)">Add to Bag</button></div>
+            <div class="tier-card silver"><p style="font-size: 12px; font-weight: 800;">SILVER</p><p style="font-size: 2.2rem; margin: 15px 0 30px;">$50</p><button class="cart-btn" onclick="addToCart('Silver', 50)">Add to Bag</button></div>
+            <div class="tier-card gold"><p style="font-size: 12px; font-weight: 800;">GOLD</p><p style="font-size: 2.2rem; margin: 15px 0 30px;">$75</p><button class="cart-btn" onclick="addToCart('Gold', 75)">Add to Bag</button></div>
+            <div class="tier-card ultra"><p style="font-size: 12px; font-weight: 800;">ULTRA</p><p style="font-size: 2.2rem; margin: 15px 0 30px;">$100</p><button class="cart-btn" onclick="addToCart('Ultra', 100)">Add to Bag</button></div>
         </section>
 
         <section style="padding: 100px 20px; text-align: center;">
-             <div style="background: rgba(255,255,255,0.03); padding: 40px; border-radius: 24px; display: inline-block; border: 1px solid rgba(255,255,255,0.05);">
-                <p style="font-size: 10px; letter-spacing: 4px; opacity: 0.4; margin-bottom: 10px;">SUPPORT</p>
-                <a href="mailto:comboss@zoinbase.co.uk" style="color: #fff; text-decoration: none; font-weight: 300;">comboss@zoinbase.co.uk</a>
-             </div>
+            <a href="mailto:comboss@zoinbase.co.uk" style="color: #fff; text-decoration: none; font-weight: 300; opacity: 0.6;">comboss@zoinbase.co.uk</a>
         </section>
     </div>
 
@@ -175,22 +137,23 @@
         let cart = [];
         let total = 0;
 
+        function showToast() {
+            const toast = document.getElementById('toast-notification');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
         function addToCart(name, price) {
             cart.push({name, price, id: Date.now()});
             total += price;
             updateCart();
-            if(!document.getElementById('cart-sidebar').classList.contains('open')) toggleCart();
+            showToast();
         }
 
         function updateCart() {
             document.getElementById('cart-count').innerText = cart.length;
             const list = document.getElementById('cart-items');
-            list.innerHTML = cart.map(item => `
-                <div class="cart-item">
-                    <div><b>${item.name}</b><br><span style="opacity:0.5">$${item.price}</span></div>
-                    <span style="color:#ff0050; cursor:pointer; font-size:10px;" onclick="removeFromCart(${item.id}, ${item.price})">REMOVE</span>
-                </div>
-            `).join('');
+            list.innerHTML = cart.map(item => `<div class="cart-item"><div><b>${item.name}</b><br><span style="opacity:0.5">$${item.price}</span></div><span style="color:#ff0050; cursor:pointer; font-size:10px;" onclick="removeFromCart(${item.id}, ${item.price})">REMOVE</span></div>`).join('');
             document.getElementById('total-val').innerText = "$" + total;
         }
 
@@ -206,7 +169,6 @@
             const bg = document.getElementById('bgImage');
             const scroll = window.scrollY;
             bg.style.transform = `scale(${1 + (scroll / 3000)})`;
-            // Dynamic Blur on scroll
             bg.style.filter = `blur(${Math.min(scroll / 100, 12)}px)`;
         });
 
@@ -217,8 +179,7 @@
                 document.getElementById('overlay').style.display = 'none';
                 document.body.style.overflowY = "auto";
                 const mc = document.getElementById('mainCard');
-                mc.style.opacity = '1';
-                mc.style.transform = 'translateY(0)';
+                mc.style.opacity = '1'; mc.style.transform = 'translateY(0)';
             });
         }
     </script>
