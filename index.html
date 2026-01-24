@@ -16,31 +16,23 @@
             overflow-x: hidden;
         }
 
-        /* --- BACKGROUND SYSTEM --- */
+        /* --- BACKGROUND --- */
         #bg-image {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             background-image: url('https://raw.githubusercontent.com/zzzlub/zlub-site/main/IMG_5991.jpg');
             background-size: cover;
             background-position: center;
             z-index: -2;
         }
-
-        .overlay-tint { 
-            position: fixed; 
-            inset: 0; 
-            background: rgba(0, 0, 0, 0.65); 
-            z-index: -1; 
-        }
+        .overlay-tint { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.65); z-index: -1; }
 
         /* --- AUTH GATE --- */
         #auth-gate {
             position: fixed; inset: 0; z-index: 10000;
             display: flex; align-items: center; justify-content: center;
-            background: #000; /* Start full black for "login every time" feel */
+            background: #000;
             transition: opacity 0.8s ease;
         }
         .terminal-box {
@@ -48,7 +40,6 @@
             border-radius: 20px; background: rgba(10, 10, 10, 0.95); text-align: center;
             backdrop-filter: blur(10px);
         }
-        
         .fade-text {
             letter-spacing: 10px; font-size: 13px; font-family: monospace;
             background: linear-gradient(to right, #333 20%, #fff 50%, #333 80%);
@@ -67,17 +58,45 @@
             width: 100%; padding: 12px; background: #fff; color: #000;
             border: none; font-weight: 900; cursor: pointer; border-radius: 8px; margin-top: 10px;
         }
-        .toggle-link { margin-top: 20px; font-size: 10px; color: #666; cursor: pointer; display: block; text-transform: uppercase; }
 
-        /* --- CONTENT --- */
+        /* --- RED FLOWING TIME --- */
+        #chrono { 
+            position: fixed; top: 25px; left: 25px; 
+            font-family: monospace; font-weight: bold; font-size: 1.2rem;
+            background: linear-gradient(to right, #ff0000, #8b0000, #ff4500, #ff0000);
+            background-size: 300% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: flow 4s linear infinite;
+            z-index: 100;
+        }
+        @keyframes flow { to { background-position: 300% center; } }
+
+        /* --- UI ELEMENTS --- */
+        .cart-icon { 
+            position: fixed; top: 25px; right: 25px; z-index: 100; 
+            width: 50px; height: 50px; background: rgba(255,255,255,0.1); 
+            border-radius: 50%; display: flex; align-items: center; 
+            justify-content: center; cursor: pointer; transition: 0.3s;
+        }
+        .cart-icon:hover { transform: scale(1.1); background: rgba(255,255,255,0.2); }
+
+        /* --- SIDEBAR --- */
+        #sidebar { 
+            position: fixed; top: 0; right: -400px; width: 320px; height: 100%; 
+            background: rgba(5, 5, 5, 0.98); z-index: 1001; padding: 40px; 
+            transition: 0.4s; border-left: 1px solid #222; display: flex; flex-direction: column;
+        }
+        #sidebar.open { right: 0; }
+        .bag-item { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #222; padding-bottom: 5px; }
+
+        /* --- CARDS --- */
         .content { position: relative; z-index: 1; padding-top: 15vh; text-align: center; }
         .hero-title { font-size: 5rem; letter-spacing: -3px; }
         .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; max-width: 1200px; margin: 40px auto; padding: 20px; }
+        .card { background: rgba(0, 0, 0, 0.85); padding: 30px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
         
-        .card { 
-            background: rgba(0, 0, 0, 0.85); padding: 30px; border-radius: 25px; 
-            border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;
-        }
         .bronze { border-top: 5px solid #cd7f32; }
         .silver { border-top: 5px solid #c0c0c0; }
         .gold { border-top: 5px solid #ffd700; }
@@ -86,12 +105,11 @@
         .buy-btn {
             margin-top: 20px; width: 100%; padding: 12px; border: none; 
             border-radius: 10px; background: #fff; color: #000; 
-            font-weight: bold; cursor: pointer;
+            font-weight: bold; cursor: pointer; transition: 0.2s;
         }
+        .buy-btn:hover { background: #00ff88; transform: translateY(-2px); }
 
         #player-ui { position: fixed; bottom: 25px; left: 25px; z-index: 100; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 12px; border: 1px solid #222; }
-        #chrono { position: fixed; top: 25px; left: 25px; font-family: monospace; color: #444; }
-        .cart-icon { position: fixed; top: 25px; right: 25px; z-index: 100; width: 50px; height: 50px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -105,25 +123,25 @@
             <input type="email" id="login-email" class="terminal-input" placeholder="ACCESS_EMAIL">
             <input type="password" id="login-pass" class="terminal-input" placeholder="PIN_CODE">
             <button class="auth-btn" onclick="handleLogin()">AUTHORIZE</button>
-            <span class="toggle-link" onclick="toggleAuth()">Sign Up</span>
             <div id="login-error" style="color:#ff0050; font-size:10px; margin-top:10px;"></div>
-        </div>
-
-        <div class="terminal-box" id="signup-form" style="display: none;">
-            <span class="fade-text">NEW OPERATIVE</span>
-            <input type="email" id="sig-email" class="terminal-input" placeholder="NEW_EMAIL">
-            <input type="password" id="sig-pass" class="terminal-input" placeholder="CREATE_PIN">
-            <button class="auth-btn" onclick="handleSignup()">REGISTER</button>
-            <span class="toggle-link" onclick="toggleAuth()">Back</span>
-            <div id="sig-error" style="color:#00ff88; font-size:10px; margin-top:10px;"></div>
         </div>
     </div>
 
     <div id="chrono">00:00:00</div>
 
-    <div class="cart-icon">
-        <div id="cart-count" style="position: absolute; top: -5px; right: -5px; background: #ff0050; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px;">0</div>
+    <div class="cart-icon" onclick="toggleBag()">
+        <div id="cart-count" style="position: absolute; top: -5px; right: -5px; background: #ff0050; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900;">0</div>
         👜
+    </div>
+
+    <div id="sidebar">
+        <h2 style="margin-bottom: 20px;">Your Bag</h2>
+        <div id="bag-list" style="flex-grow: 1;"></div>
+        <div style="border-top: 1px solid #333; padding-top: 20px;">
+            <p id="total-price" style="font-weight: bold; font-size: 1.2rem; margin-bottom: 20px;">Total: $0</p>
+            <button class="auth-btn" style="background:#00ff88; margin-bottom: 10px;">CHECKOUT</button>
+            <button class="auth-btn" style="background:#222; color:#fff;" onclick="toggleBag()">CLOSE</button>
+        </div>
     </div>
 
     <div id="player-ui">
@@ -139,22 +157,22 @@
             <div class="card bronze">
                 <h3 style="color:#cd7f32">LARPBRONZE</h3>
                 <p style="margin: 10px 0;">$30</p>
-                <button class="buy-btn" onclick="addToBag()">ADD</button>
+                <button class="buy-btn" onclick="addToBag('LARPBRONZE', 30)">ADD</button>
             </div>
             <div class="card silver">
                 <h3 style="color:#c0c0c0">LARPSILVER</h3>
                 <p style="margin: 10px 0;">$50</p>
-                <button class="buy-btn" onclick="addToBag()">ADD</button>
+                <button class="buy-btn" onclick="addToBag('LARPSILVER', 50)">ADD</button>
             </div>
             <div class="card gold">
                 <h3 style="color:#ffd700">LARPGOLD</h3>
                 <p style="margin: 10px 0;">$75</p>
-                <button class="buy-btn" onclick="addToBag()">ADD</button>
+                <button class="buy-btn" onclick="addToBag('LARPGOLD', 75)">ADD</button>
             </div>
             <div class="card ultra">
                 <h3 style="color:#a333ff">LARPULTRA</h3>
                 <p style="margin: 10px 0;">$100</p>
-                <button class="buy-btn" onclick="addToBag()">ADD</button>
+                <button class="buy-btn" onclick="addToBag('LARPULTRA', 100)">ADD</button>
             </div>
         </div>
     </div>
@@ -166,50 +184,55 @@
         const _KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmaXBjanNwZXV0a25reXVncWNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkyNTk5MDgsImV4cCI6MjA4NDgzNTkwOH0._x3QdbC2FN4ibYMSpqYJArTM5WF0B8dfjvkJnYV9ZNw";
         const supabaseClient = supabase.createClient(_URL, _KEY);
         const music = document.getElementById('audio-player');
+        let bag = [];
 
-        // FORCE LOGOUT ON EVERY REFRESH
         window.onload = async () => {
             await supabaseClient.auth.signOut();
             document.getElementById('auth-gate').style.display = 'flex';
         };
-
-        function toggleAuth() {
-            document.getElementById('login-form').style.display = document.getElementById('login-form').style.display === 'none' ? 'block' : 'none';
-            document.getElementById('signup-form').style.display = document.getElementById('signup-form').style.display === 'none' ? 'block' : 'none';
-        }
 
         async function handleLogin() {
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-pass').value;
             const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
             if (error) document.getElementById('login-error').innerText = error.message.toUpperCase();
-            else unlock();
-        }
-
-        async function handleSignup() {
-            const email = document.getElementById('sig-email').value;
-            const password = document.getElementById('sig-pass').value;
-            const { error } = await supabaseClient.auth.signUp({ email, password });
-            if (error) document.getElementById('sig-error').style.color = "#ff0050", document.getElementById('sig-error').innerText = error.message.toUpperCase();
-            else document.getElementById('sig-error').style.color = "#00ff88", document.getElementById('sig-error').innerText = "CHECK EMAIL TO CONFIRM.";
-        }
-
-        function unlock() {
-            document.getElementById('auth-gate').style.opacity = '0';
-            setTimeout(() => { 
-                document.getElementById('auth-gate').style.display = 'none'; 
-                // AUTO PLAY AT 00:20
-                music.currentTime = 20; 
-                music.play(); 
-            }, 800);
+            else {
+                document.getElementById('auth-gate').style.opacity = '0';
+                setTimeout(() => { 
+                    document.getElementById('auth-gate').style.display = 'none'; 
+                    music.currentTime = 20; 
+                    music.play(); 
+                }, 800);
+            }
         }
 
         function togglePlay() { music.paused ? music.play() : music.pause(); }
-        function addToBag() { 
-            let count = parseInt(document.getElementById('cart-count').innerText);
-            document.getElementById('cart-count').innerText = count + 1;
+
+        function toggleBag() {
+            document.getElementById('sidebar').classList.toggle('open');
         }
-        setInterval(() => { document.getElementById('chrono').innerText = new Date().toLocaleTimeString(); }, 1000);
+
+        function addToBag(name, price) {
+            bag.push({name, price});
+            updateUI();
+            if(!document.getElementById('sidebar').classList.contains('open')) toggleBag();
+        }
+
+        function updateUI() {
+            document.getElementById('cart-count').innerText = bag.length;
+            document.getElementById('bag-list').innerHTML = bag.map(item => `
+                <div class="bag-item">
+                    <span>${item.name}</span>
+                    <span>$${item.price}</span>
+                </div>
+            `).join('');
+            const total = bag.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('total-price').innerText = `Total: $${total}`;
+        }
+
+        setInterval(() => { 
+            document.getElementById('chrono').innerText = new Date().toLocaleTimeString(); 
+        }, 1000);
     </script>
 </body>
 </html>
