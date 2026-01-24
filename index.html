@@ -8,64 +8,55 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body, html { 
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             font-family: -apple-system, system-ui, sans-serif; 
-            background-color: #000;
-            color: #fff;
-            overflow-x: hidden;
-            overflow-y: hidden; /* Locked until enter */
+            background-color: #000; color: #fff;
+            overflow-x: hidden; overflow-y: hidden;
         }
 
-        /* 1. THE BACKGROUND FIX (Reverted to the CSS version that worked) */
-        .bg-fixed {
+        /* THE FIX: A dedicated layer for the image that cannot be painted over */
+        .bg-layer {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
-                        url('https://raw.githubusercontent.com/zzzlub/zlub-site/main/IMG_5991.HEIC');
-            background-size: cover; 
-            background-position: center;
-            background-repeat: no-repeat;
-            z-index: -1;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -5; /* Deepest possible layer */
+            overflow: hidden;
+            background: #000;
+        }
+
+        #bgImage {
+            width: 100%; height: 100%;
+            object-fit: cover; /* Ensures it fills the screen */
+            display: block;
             transition: transform 0.2s ease-out;
         }
 
-        /* Mobile specific background tweak */
-        @media (max-width: 768px) {
-            .bg-fixed {
-                background-position: 70% center; /* Shows more of the watch face on thin screens */
-            }
+        /* Subtle dark tint to make text pop */
+        .overlay-tint {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: -4;
         }
 
         .main-content {
             position: relative;
-            z-index: 1;
+            z-index: 10;
             width: 100%;
-            background: transparent;
         }
 
         .hero {
             height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: transparent;
+            display: flex; justify-content: center; align-items: center;
         }
 
-        /* The Card with Shimmer */
         .card {
             background: rgba(255, 255, 255, 0.1); 
-            backdrop-filter: blur(20px); 
-            -webkit-backdrop-filter: blur(20px);
-            padding: 40px; 
-            border-radius: 24px; 
-            text-align: center; 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            padding: 40px; border-radius: 24px; text-align: center; 
             border: 1px solid rgba(255, 255, 255, 0.2);
-            opacity: 0;
-            transform: translateY(20px);
+            opacity: 0; transform: translateY(20px);
             transition: opacity 1.5s ease, transform 1.2s ease;
             max-width: 90%;
         }
@@ -73,95 +64,71 @@
         .card.active { opacity: 1; transform: translateY(0); }
 
         h1 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 20px;
+            font-size: 1.8rem; font-weight: 700; margin-bottom: 20px;
             background: linear-gradient(to right, #fff 20%, #a3a3a3 40%, #fff 50%, #fff 60%, #a3a3a3 80%);
-            background-size: 200% auto;
-            color: #fff;
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            background-size: 200% auto; color: #fff;
+            background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             animation: shine 4s linear infinite;
         }
         @keyframes shine { to { background-position: 200% center; } }
 
         .tiktok-link {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            text-decoration: none;
-            padding: 12px 30px;
-            border-radius: 12px;
-            font-weight: 600;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: inline-block; background: rgba(255, 255, 255, 0.15);
+            color: white; text-decoration: none; padding: 12px 30px;
+            border-radius: 12px; font-weight: 600; border: 1px solid rgba(255, 255, 255, 0.3);
             transition: 0.3s;
         }
-        .tiktok-link:hover { background: #ff0050; }
+        .tiktok-link:hover { background: #ff0050; box-shadow: 0 0 20px rgba(255, 0, 80, 0.6); }
 
-        /* 2. TIERS SECTION */
+        /* TIERS SECTION */
         .tiers-section {
-            padding: 60px 20px;
-            display: grid;
+            padding: 60px 20px; display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-            background: transparent;
+            gap: 20px; max-width: 1200px; margin: 0 auto;
         }
 
         .tier-card {
             background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            padding: 30px; border-radius: 20px; text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .tier-name { font-weight: 800; font-size: 1.2rem; margin-bottom: 8px; }
         .tier-price { font-size: 2.2rem; font-weight: 300; margin-bottom: 25px; }
 
-        /* Colored Buttons with Hover-Scale */
         .cart-btn {
             width: 100%; padding: 14px; border-radius: 12px; border: none;
             color: #fff; font-weight: 800; cursor: pointer; 
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-transform: uppercase;
         }
-
-        .cart-btn:hover { transform: scale(1.08); } /* Buttons get slightly bigger */
+        .cart-btn:hover { transform: scale(1.08); }
 
         .bronze { border-top: 5px solid #cd7f32; }
         .bronze .cart-btn { background: #cd7f32; }
+        .bronze .cart-btn:hover { box-shadow: 0 0 25px rgba(205, 127, 50, 0.8); }
 
         .silver { border-top: 5px solid #c0c0c0; }
         .silver .cart-btn { background: #7a7a7a; }
+        .silver .cart-btn:hover { box-shadow: 0 0 25px rgba(192, 192, 192, 0.8); }
 
         .gold { border-top: 5px solid #ffd700; }
         .gold .cart-btn { background: #ffd700; color: #000; }
+        .gold .cart-btn:hover { box-shadow: 0 0 25px rgba(255, 215, 0, 0.8); }
 
         .ultra { border-top: 5px solid #a333ff; }
         .ultra .cart-btn { background: #a333ff; }
+        .ultra .cart-btn:hover { box-shadow: 0 0 25px rgba(163, 51, 255, 0.8); }
 
-        /* 3. CONTACT */
-        .contact-section {
-            padding: 100px 20px;
-            text-align: center;
-            background: transparent;
-        }
+        .contact-section { padding: 100px 20px; text-align: center; }
         .contact-card {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 40px;
-            border-radius: 24px;
-            display: inline-block;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05); padding: 40px; border-radius: 24px;
+            display: inline-block; border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .contact-card a { color: #fff; text-decoration: none; opacity: 0.7; transition: 0.3s; }
         .contact-card a:hover { opacity: 1; }
 
-        /* OVERLAY */
         #overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 9999; display: flex; 
@@ -176,7 +143,10 @@
         <p style="color: white; letter-spacing: 3px; font-size: 12px;">TAP TO ENTER</p>
     </div>
 
-    <div class="bg-fixed" id="bgImage"></div>
+    <div class="bg-layer">
+        <img id="bgImage" src="https://raw.githubusercontent.com/zzzlub/zlub-site/main/IMG_5991.HEIC" alt="watches">
+    </div>
+    <div class="overlay-tint"></div>
 
     <div class="main-content">
         <section class="hero">
@@ -216,7 +186,6 @@
                 <a href="mailto:comboss@zoinbase.co.uk">comboss@zoinbase.co.uk</a>
             </div>
         </section>
-
         <div style="height: 50px;"></div>
     </div>
 
@@ -225,7 +194,6 @@
     </audio>
 
     <script>
-        // BACKGROUND ZOOM LOGIC
         window.addEventListener('scroll', () => {
             const scroll = window.scrollY;
             const bg = document.getElementById('bgImage');
