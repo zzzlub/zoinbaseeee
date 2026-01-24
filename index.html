@@ -5,50 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>zzlub</title>
     <style>
-        /* 1. Reset everything to stop black gaps */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body, html { 
-            height: 100%; 
+        /* 1. THE FIX: Apply background directly to the body */
+        html, body {
+            margin: 0;
+            padding: 0;
             width: 100%;
-            font-family: -apple-system, system-ui, sans-serif; 
-            background-color: #000;
-            color: #fff;
-            /* Allow scrolling only after enter */
-            overflow-x: hidden;
-            overflow-y: hidden; 
-        }
-
-        /* 2. THE BACKGROUND - Exactly the version that worked for you */
-        .background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-image: url('https://raw.githubusercontent.com/zzzlub/zlub-site/main/IMG_5991.HEIC');
+            min-height: 100%;
+            font-family: -apple-system, system-ui, sans-serif;
+            /* Re-using the exact link that worked for you */
+            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), 
+                              url('https://raw.githubusercontent.com/zzzlub/zlub-site/main/IMG_5991.HEIC');
+            background-attachment: fixed; /* Keep it still while scrolling */
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            z-index: -2; /* Set to the very bottom */
+            background-color: #000; /* Fallback */
+            color: #fff;
+            overflow-x: hidden;
+            /* Scroll locked until TAP TO ENTER */
+            overflow-y: hidden; 
         }
 
-        /* Darkening layer so you can read the text */
-        .overlay-dim {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0,0,0,0.3);
-            z-index: -1;
-        }
-
-        /* 3. SCROLLING CONTENT */
-        .main-container {
+        /* 2. TRANSPARENT LAYOUT */
+        .main-content {
             position: relative;
-            z-index: 1; /* Sits above the fixed background */
             width: 100%;
+            background: transparent; /* Ensure no black boxes cover the image */
         }
 
         .hero {
@@ -56,6 +38,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            background: transparent;
         }
 
         /* The Card with Shimmer & Fade */
@@ -99,7 +82,7 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        /* 4. PRICING SECTION */
+        /* 3. PRICING SECTION */
         .tiers-section {
             padding: 80px 20px;
             display: grid;
@@ -107,10 +90,11 @@
             gap: 20px;
             max-width: 1200px;
             margin: 0 auto;
+            background: transparent;
         }
 
         .tier-card {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             padding: 30px;
@@ -120,7 +104,7 @@
         }
 
         .tier-name { font-weight: 800; font-size: 1.2rem; margin-bottom: 10px; }
-        .tier-price { font-size: 2rem; font-weight: 300; margin-bottom: 20px; }
+        .tier-price { font-size: 2.2rem; font-weight: 300; margin-bottom: 20px; }
         
         .bronze { border-top: 5px solid #cd7f32; }
         .silver { border-top: 5px solid #c0c0c0; }
@@ -136,15 +120,23 @@
             color: #000; 
             font-weight: 700; 
             cursor: pointer;
-            z-index: 50; /* Ensure button is on top */
-            position: relative;
+            transition: transform 0.2s;
         }
+        .cart-btn:active { transform: scale(0.95); }
 
-        /* TAP TO ENTER OVERLAY */
+        /* 4. TAP TO ENTER OVERLAY */
         #overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 9999; display: flex; 
-            justify-content: center; align-items: center; cursor: pointer;
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: #000; 
+            z-index: 9999; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            cursor: pointer;
             transition: opacity 0.8s ease;
         }
     </style>
@@ -155,15 +147,12 @@
         <p style="color: white; letter-spacing: 3px; font-size: 12px;">TAP TO ENTER</p>
     </div>
 
-    <div class="background"></div>
-    <div class="overlay-dim"></div>
-
-    <div class="main-container">
+    <div class="main-content">
         <section class="hero">
             <div class="card" id="mainCard">
                 <h1>Team coming soon...</h1>
                 <a href="https://www.tiktok.com/@zzzlub?_r=1&_t=ZN-93K97bcFoFa" target="_blank" class="tiktok-link">TikTok</a>
-                <p style="margin-top: 40px; font-size: 10px; opacity: 0.5; letter-spacing: 2px;">SCROLL FOR TIERS</p>
+                <p style="margin-top: 40px; font-size: 10px; opacity: 0.6; letter-spacing: 2px;">SCROLL FOR TIERS</p>
             </div>
         </section>
 
@@ -171,26 +160,26 @@
             <div class="tier-card bronze">
                 <p class="tier-name">LarpBronze</p>
                 <p class="tier-price">$30</p>
-                <button class="cart-btn" onclick="alert('Added to cart!')">Add to Cart</button>
+                <button class="cart-btn" onclick="alert('Added Bronze to cart!')">Add to Cart</button>
             </div>
             <div class="tier-card silver">
                 <p class="tier-name">LarpSilver</p>
                 <p class="tier-price">$50</p>
-                <button class="cart-btn" onclick="alert('Added to cart!')">Add to Cart</button>
+                <button class="cart-btn" onclick="alert('Added Silver to cart!')">Add to Cart</button>
             </div>
             <div class="tier-card gold">
                 <p class="tier-name">LarpGold</p>
                 <p class="tier-price">$75</p>
-                <button class="cart-btn" onclick="alert('Added to cart!')">Add to Cart</button>
+                <button class="cart-btn" onclick="alert('Added Gold to cart!')">Add to Cart</button>
             </div>
             <div class="tier-card ultra">
                 <p class="tier-name">LarpUltra</p>
                 <p class="tier-price">$100</p>
-                <button class="cart-btn" onclick="alert('Added to cart!')">Add to Cart</button>
+                <button class="cart-btn" onclick="alert('Added Ultra to cart!')">Add to Cart</button>
             </div>
         </section>
 
-        <div style="height: 100px;"></div>
+        <div style="height: 150px;"></div>
     </div>
 
     <audio id="player" loop preload="auto">
@@ -206,10 +195,12 @@
             audio.currentTime = 20;
             audio.play().then(() => {
                 overlay.style.opacity = '0';
-                // Unlock scrolling
+                // Enable scroll on the body
                 document.body.style.overflowY = "auto"; 
+                document.documentElement.style.overflowY = "auto";
+
                 setTimeout(() => {
-                    overlay.style.display = 'none'; // REMOVES it so you can click buttons
+                    overlay.style.display = 'none'; // Completely remove overlay so buttons work
                     card.classList.add('active');
                 }, 800);
             }).catch(err => {
