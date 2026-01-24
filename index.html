@@ -7,18 +7,21 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        body, html { 
-            width: 100%; height: 100%; 
-            background: #000; color: #fff;
+        /* The body MUST be transparent or the image stays hidden behind it */
+        html { background-color: #000; }
+        body { 
+            width: 100%; min-height: 100vh; 
+            background: transparent; color: #fff;
             font-family: -apple-system, system-ui, sans-serif;
             overflow-x: hidden;
         }
 
-        /* --- THE BACKGROUND ENGINE --- */
+        /* --- BACKGROUND SYSTEM --- */
         #bg-container {
             position: fixed; top: 0; left: 0;
             width: 100vw; height: 100vh;
             z-index: -2; overflow: hidden;
+            pointer-events: none;
         }
 
         #bg-image {
@@ -29,6 +32,7 @@
             background-size: 100% 100%; /* Forced Stretch */
         }
 
+        /* Desktop Rotation Fix */
         @media (min-width: 769px) {
             #bg-image {
                 transform: rotate(90deg);
@@ -40,7 +44,7 @@
 
         .overlay-tint {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.4); z-index: -1; pointer-events: none;
+            background: rgba(0, 0, 0, 0.45); z-index: -1; pointer-events: none;
         }
 
         /* --- UI ELEMENTS --- */
@@ -59,14 +63,16 @@
             display: flex; align-items: center; justify-content: center; font-weight: 900;
         }
 
-        /* --- SIDEBAR BAG --- */
+        /* --- SIDEBAR --- */
         #sidebar {
             position: fixed; top: 0; right: -400px; width: 320px; height: 100%;
             background: rgba(10,10,10,0.98); backdrop-filter: blur(30px);
             z-index: 1000; padding: 40px; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             border-left: 1px solid rgba(255,255,255,0.1);
+            display: flex; flex-direction: column;
         }
         #sidebar.open { right: 0; }
+        #bag-list { flex-grow: 1; overflow-y: auto; margin-top: 20px; }
         .bag-item { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
 
         /* --- CONTENT & CARDS --- */
@@ -81,17 +87,15 @@
         .card {
             background: rgba(255,255,255,0.05); backdrop-filter: blur(20px);
             padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
-            transition: 0.3s;
         }
-        .card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.1); }
 
-        /* LARP COLORS RESTORED */
         .bronze { border-top: 5px solid #cd7f32; }
         .silver { border-top: 5px solid #c0c0c0; }
         .gold { border-top: 5px solid #ffd700; }
         .ultra { border-top: 5px solid #a333ff; }
 
         .btn { margin-top: 25px; width: 100%; padding: 15px; border: none; border-radius: 12px; background: #fff; color: #000; font-weight: 800; cursor: pointer; }
+        .checkout-btn { background: #00ff88; color: #000; margin-top: 10px; }
 
         #entry {
             position: fixed; inset: 0; background: #000; z-index: 9999;
@@ -118,11 +122,12 @@
     </div>
 
     <div id="sidebar">
-        <h2 style="margin-bottom: 30px;">Your Bag</h2>
+        <h2 style="letter-spacing: -1px;">Your Bag</h2>
         <div id="bag-list"></div>
-        <div style="margin-top: 30px; border-top: 1px solid #333; padding-top: 20px;">
-            <p id="total-price">Total: $0</p>
-            <button class="btn" onclick="toggleBag()">CLOSE</button>
+        <div style="padding-top: 20px;">
+            <p id="total-price" style="font-weight: bold; margin-bottom: 15px;">Total: $0</p>
+            <button class="btn checkout-btn" onclick="alert('Redirecting to secure checkout...')">CHECKOUT</button>
+            <button class="btn" style="background: rgba(255,255,255,0.1); color: #fff;" onclick="toggleBag()">CLOSE</button>
         </div>
     </div>
 
