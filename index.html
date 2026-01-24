@@ -11,12 +11,13 @@
             height: 100%; 
             width: 100%;
             font-family: -apple-system, system-ui, sans-serif; 
+            background: #000;
+            color: #fff;
+            /* Scroll is hidden until they tap ENTER */
             overflow: hidden; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
         }
         
+        /* Background remains fixed so content scrolls over it */
         .bg {
             position: fixed; 
             top: 0; 
@@ -31,7 +32,23 @@
             z-index: -1;
         }
 
-        /* The Card with Fade Animation */
+        /* Layout wrapper */
+        .content-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Hero Section (First view) */
+        .hero {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
         .card {
             background: rgba(255, 255, 255, 0.1); 
             backdrop-filter: blur(20px); 
@@ -41,28 +58,28 @@
             text-align: center; 
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            z-index: 10;
             max-width: 90%;
-            
-            /* Hidden by default until startAudio is called */
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 1.5s ease, transform 1.2s ease;
         }
 
-        /* Active class to trigger the fade */
-        .card.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .card.active { opacity: 1; transform: translateY(0); }
 
         h1 {
-            color: white;
             font-size: 1.8rem;
             font-weight: 700;
-            letter-spacing: -0.5px;
             margin-bottom: 20px;
+            background: linear-gradient(to right, #fff 20%, #a3a3a3 40%, #fff 50%, #fff 60%, #a3a3a3 80%);
+            background-size: 200% auto;
+            color: #fff;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 4s linear infinite;
         }
+
+        @keyframes shine { to { background-position: 200% center; } }
 
         .tiktok-link {
             display: inline-block;
@@ -72,30 +89,62 @@
             padding: 12px 30px;
             border-radius: 12px;
             font-weight: 600;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        .tiktok-link:hover {
-            background: #ff0050; 
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 0, 80, 0.4);
+        .tiktok-link:hover { background: #ff0050; transform: translateY(-2px); }
+
+        /* Payment Tiers Section */
+        .tiers-section {
+            padding: 100px 20px;
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
         }
 
-        #overlay {
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%;
-            background: #000; 
-            z-index: 999; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
+        .tier-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .tier-card:hover { transform: translateY(-10px); background: rgba(255, 255, 255, 0.1); }
+
+        .tier-name { font-weight: 800; font-size: 1.2rem; margin-bottom: 10px; letter-spacing: 1px; }
+        .tier-price { font-size: 2rem; font-weight: 300; margin-bottom: 20px; }
+        
+        /* Specific Tier Colors */
+        .bronze { border-top: 4px solid #cd7f32; }
+        .silver { border-top: 4px solid #c0c0c0; }
+        .gold { border-top: 4px solid #ffd700; }
+        .ultra { border-top: 4px solid #a333ff; }
+
+        .cart-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            background: #fff;
+            color: #000;
+            font-weight: 700;
             cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .cart-btn:hover { opacity: 0.8; }
+
+        #overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 999; display: flex; 
+            justify-content: center; align-items: center; cursor: pointer;
             transition: opacity 0.8s ease;
         }
     </style>
@@ -108,9 +157,37 @@
 
     <div class="bg"></div>
 
-    <div class="card" id="mainCard">
-        <h1>Team coming soon...</h1>
-        <a href="https://www.tiktok.com/@zzzlub?_r=1&_t=ZN-93K97bcFoFa" target="_blank" class="tiktok-link">TikTok</a>
+    <div class="content-wrapper">
+        <section class="hero">
+            <div class="card" id="mainCard">
+                <h1>Team coming soon...</h1>
+                <a href="https://www.tiktok.com/@zzzlub?_r=1&_t=ZN-93K97bcFoFa" target="_blank" class="tiktok-link">TikTok</a>
+                <p style="margin-top: 20px; font-size: 10px; opacity: 0.5; letter-spacing: 1px;">SCROLL DOWN</p>
+            </div>
+        </section>
+
+        <section class="tiers-section">
+            <div class="tier-card bronze">
+                <p class="tier-name">LarpBronze</p>
+                <p class="tier-price">$30</p>
+                <button class="cart-btn">Add to Cart</button>
+            </div>
+            <div class="tier-card silver">
+                <p class="tier-name">LarpSilver</p>
+                <p class="tier-price">$50</p>
+                <button class="cart-btn">Add to Cart</button>
+            </div>
+            <div class="tier-card gold">
+                <p class="tier-name">LarpGold</p>
+                <p class="tier-price">$75</p>
+                <button class="cart-btn">Add to Cart</button>
+            </div>
+            <div class="tier-card ultra">
+                <p class="tier-name">LarpUltra</p>
+                <p class="tier-price">$100</p>
+                <button class="cart-btn">Add to Cart</button>
+            </div>
+        </section>
     </div>
 
     <audio id="player" loop preload="auto">
@@ -123,19 +200,19 @@
             const overlay = document.getElementById('overlay');
             const card = document.getElementById('mainCard');
             
-            // Set song to start exactly 20 seconds in
             audio.currentTime = 20;
             
             audio.play().then(() => {
-                // Fade out black overlay
                 overlay.style.opacity = '0';
+                // Allow scrolling now that the site is entered
+                document.body.style.overflowY = "auto"; 
                 
-                // Fade in the card
                 setTimeout(() => {
                     overlay.style.display = 'none';
                     card.classList.add('active');
                 }, 400);
             }).catch(err => {
+                document.body.style.overflowY = "auto";
                 overlay.style.display = 'none';
                 card.classList.add('active');
             });
