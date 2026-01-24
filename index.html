@@ -7,10 +7,12 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        html { background-color: #000; }
-        body { 
+        /* Absolute transparency to force the image to show */
+        html, body { 
             width: 100%; min-height: 100vh; 
-            background: transparent; color: #fff;
+            background: none !important; 
+            background-color: transparent !important;
+            color: #fff;
             font-family: -apple-system, system-ui, sans-serif;
             overflow-x: hidden;
             display: flex;
@@ -23,6 +25,7 @@
             width: 100vw; height: 100vh;
             z-index: -2; overflow: hidden;
             pointer-events: none;
+            background: #000;
         }
 
         #bg-image {
@@ -97,21 +100,11 @@
         .btn { margin-top: 25px; width: 100%; padding: 15px; border: none; border-radius: 12px; background: #fff; color: #000; font-weight: 800; cursor: pointer; }
         .checkout-btn { background: #00ff88; color: #000; margin-top: 10px; }
         
-        /* --- FOOTER / EMAIL --- */
-        footer {
-            position: relative;
-            z-index: 1;
-            padding: 60px 20px;
-            text-align: center;
-        }
+        /* --- FOOTER --- */
+        footer { position: relative; z-index: 1; padding: 60px 20px; text-align: center; }
         .footer-email {
-            font-size: 11px;
-            letter-spacing: 5px;
-            opacity: 0.4;
-            text-decoration: none;
-            color: #fff;
-            transition: 0.3s;
-            text-transform: uppercase;
+            font-size: 11px; letter-spacing: 5px; opacity: 0.4;
+            text-decoration: none; color: #fff; transition: 0.3s; text-transform: uppercase;
         }
         .footer-email:hover { opacity: 1; color: #00ff88; }
 
@@ -154,27 +147,27 @@
         <p style="letter-spacing: 12px; font-size: 10px; opacity: 0.6; margin-bottom: 50px;">LARP SERIES</p>
 
         <div class="tiers">
-            <div class="card bronze">
+            <div class="card bronze" onclick="addToBag('LarpBronze', 30)">
                 <h3>LARPBRONZE</h3><p style="font-size: 2rem; margin-top: 10px;">$30</p>
-                <button class="btn" onclick="addToBag('LarpBronze', 30)">ADD TO BAG</button>
+                <button class="btn">ADD TO BAG</button>
             </div>
-            <div class="card silver">
+            <div class="card silver" onclick="addToBag('LarpSilver', 50)">
                 <h3>LARPSILVER</h3><p style="font-size: 2rem; margin-top: 10px;">$50</p>
-                <button class="btn" onclick="addToBag('LarpSilver', 50)">ADD TO BAG</button>
+                <button class="btn">ADD TO BAG</button>
             </div>
-            <div class="card gold">
+            <div class="card gold" onclick="addToBag('LarpGold', 75)">
                 <h3>LARPGOLD</h3><p style="font-size: 2rem; margin-top: 10px;">$75</p>
-                <button class="btn" onclick="addToBag('LarpGold', 75)">ADD TO BAG</button>
+                <button class="btn">ADD TO BAG</button>
             </div>
-            <div class="card ultra">
+            <div class="card ultra" onclick="addToBag('LarpUltra', 100)">
                 <h3>LARPULTRA</h3><p style="font-size: 2rem; margin-top: 10px;">$100</p>
-                <button class="btn" onclick="addToBag('LarpUltra', 100)">ADD TO BAG</button>
+                <button class="btn">ADD TO BAG</button>
             </div>
         </div>
     </div>
 
     <footer>
-        <a href="mailto:support@zzlub.com" class="footer-email">support@zzlub.com</a>
+        <a href="mailto:comboss@zoinbase.co.uk" class="footer-email">comboss@zoinbase.co.uk</a>
     </footer>
 
     <audio id="audio-player" loop src="https://raw.githubusercontent.com/zzzlub/zlub-site/main/Weiland%20-%20Blue%20Bands%20-%20saucegodest%20-%20SoundLoadMate.com.mp3"></audio>
