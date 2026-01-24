@@ -5,32 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>zzlub</title>
     <style>
-        /* 1. THE FIX: Apply background directly to the body */
-        html, body {
-            margin: 0;
-            padding: 0;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body, html { 
             width: 100%;
-            min-height: 100%;
-            font-family: -apple-system, system-ui, sans-serif;
-            /* Re-using the exact link that worked for you */
+            font-family: -apple-system, system-ui, sans-serif; 
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+            overflow-y: hidden; /* Locked until enter */
+        }
+
+        /* 1. BACKGROUND ZOOM LOGIC */
+        .bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .background {
+            width: 100%;
+            height: 100%;
             background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), 
                               url('https://raw.githubusercontent.com/zzzlub/zlub-site/main/IMG_5991.HEIC');
-            background-attachment: fixed; /* Keep it still while scrolling */
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            background-color: #000; /* Fallback */
-            color: #fff;
-            overflow-x: hidden;
-            /* Scroll locked until TAP TO ENTER */
-            overflow-y: hidden; 
+            transition: transform 0.1s ease-out; /* Smooth zoom transition */
         }
 
-        /* 2. TRANSPARENT LAYOUT */
+        /* Mobile Fix: Prevent extreme zoom on tall screens */
+        @media (max-width: 768px) {
+            .background {
+                background-size: cover; 
+                background-position: 65% center; /* Adjusts which part of the watch is visible on mobile */
+            }
+        }
+
         .main-content {
             position: relative;
+            z-index: 1;
             width: 100%;
-            background: transparent; /* Ensure no black boxes cover the image */
         }
 
         .hero {
@@ -38,10 +57,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: transparent;
         }
 
-        /* The Card with Shimmer & Fade */
+        /* Shimmer Card */
         .card {
             background: rgba(255, 255, 255, 0.1); 
             backdrop-filter: blur(20px); 
@@ -80,17 +98,18 @@
             border-radius: 12px;
             font-weight: 600;
             border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: background 0.3s;
         }
+        .tiktok-link:hover { background: #ff0050; }
 
-        /* 3. PRICING SECTION */
+        /* 2. PAYMENT TIERS & BUTTON COLORS */
         .tiers-section {
-            padding: 80px 20px;
+            padding: 60px 20px;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 20px;
             max-width: 1200px;
             margin: 0 auto;
-            background: transparent;
         }
 
         .tier-card {
@@ -98,45 +117,56 @@
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             padding: 30px;
-            border-radius: 20px;
+            border-radius: 22px;
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .tier-name { font-weight: 800; font-size: 1.2rem; margin-bottom: 10px; }
-        .tier-price { font-size: 2.2rem; font-weight: 300; margin-bottom: 20px; }
-        
-        .bronze { border-top: 5px solid #cd7f32; }
-        .silver { border-top: 5px solid #c0c0c0; }
-        .gold { border-top: 5px solid #ffd700; }
-        .ultra { border-top: 5px solid #a333ff; }
+        .tier-name { font-weight: 800; font-size: 1.2rem; margin-bottom: 8px; }
+        .tier-price { font-size: 2.2rem; font-weight: 300; margin-bottom: 25px; }
 
         .cart-btn {
-            width: 100%; 
-            padding: 14px; 
-            border-radius: 12px; 
-            border: none;
-            background: #fff; 
-            color: #000; 
-            font-weight: 700; 
-            cursor: pointer;
-            transition: transform 0.2s;
+            width: 100%; padding: 14px; border-radius: 12px; border: none;
+            color: #fff; font-weight: 800; cursor: pointer; transition: 0.3s;
+            text-transform: uppercase; letter-spacing: 1px;
         }
-        .cart-btn:active { transform: scale(0.95); }
 
-        /* 4. TAP TO ENTER OVERLAY */
+        /* Tier specific colors */
+        .bronze { border-top: 5px solid #cd7f32; }
+        .bronze .cart-btn { background: #cd7f32; }
+
+        .silver { border-top: 5px solid #c0c0c0; }
+        .silver .cart-btn { background: #7a7a7a; }
+
+        .gold { border-top: 5px solid #ffd700; }
+        .gold .cart-btn { background: #ffd700; color: #000; }
+
+        .ultra { border-top: 5px solid #a333ff; }
+        .ultra .cart-btn { background: #a333ff; }
+
+        .cart-btn:hover { opacity: 0.8; transform: scale(1.02); }
+
+        /* 3. CONTACT SECTION */
+        .contact-section {
+            padding: 100px 20px;
+            text-align: center;
+        }
+        .contact-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 24px;
+            display: inline-block;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .contact-card h2 { margin-bottom: 15px; font-size: 1.5rem; letter-spacing: 2px; }
+        .contact-card a { color: #fff; text-decoration: none; font-weight: 300; opacity: 0.7; transition: 0.3s; }
+        .contact-card a:hover { opacity: 1; }
+
+        /* OVERLAY */
         #overlay {
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%;
-            background: #000; 
-            z-index: 9999; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            cursor: pointer;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999; display: flex; 
+            justify-content: center; align-items: center; cursor: pointer;
             transition: opacity 0.8s ease;
         }
     </style>
@@ -147,12 +177,16 @@
         <p style="color: white; letter-spacing: 3px; font-size: 12px;">TAP TO ENTER</p>
     </div>
 
+    <div class="bg-container">
+        <div class="background" id="bgImage"></div>
+    </div>
+
     <div class="main-content">
         <section class="hero">
             <div class="card" id="mainCard">
                 <h1>Team coming soon...</h1>
                 <a href="https://www.tiktok.com/@zzzlub?_r=1&_t=ZN-93K97bcFoFa" target="_blank" class="tiktok-link">TikTok</a>
-                <p style="margin-top: 40px; font-size: 10px; opacity: 0.6; letter-spacing: 2px;">SCROLL FOR TIERS</p>
+                <p style="margin-top: 40px; font-size: 10px; opacity: 0.6; letter-spacing: 2px;">SCROLL DOWN</p>
             </div>
         </section>
 
@@ -160,26 +194,33 @@
             <div class="tier-card bronze">
                 <p class="tier-name">LarpBronze</p>
                 <p class="tier-price">$30</p>
-                <button class="cart-btn" onclick="alert('Added Bronze to cart!')">Add to Cart</button>
+                <button class="cart-btn">Add to Cart</button>
             </div>
             <div class="tier-card silver">
                 <p class="tier-name">LarpSilver</p>
                 <p class="tier-price">$50</p>
-                <button class="cart-btn" onclick="alert('Added Silver to cart!')">Add to Cart</button>
+                <button class="cart-btn">Add to Cart</button>
             </div>
             <div class="tier-card gold">
                 <p class="tier-name">LarpGold</p>
                 <p class="tier-price">$75</p>
-                <button class="cart-btn" onclick="alert('Added Gold to cart!')">Add to Cart</button>
+                <button class="cart-btn">Add to Cart</button>
             </div>
             <div class="tier-card ultra">
                 <p class="tier-name">LarpUltra</p>
                 <p class="tier-price">$100</p>
-                <button class="cart-btn" onclick="alert('Added Ultra to cart!')">Add to Cart</button>
+                <button class="cart-btn">Add to Cart</button>
             </div>
         </section>
 
-        <div style="height: 150px;"></div>
+        <section class="contact-section">
+            <div class="contact-card">
+                <h2>CONTACT</h2>
+                <a href="mailto:comboss@zoinbase.co.uk">comboss@zoinbase.co.uk</a>
+            </div>
+        </section>
+
+        <div style="height: 50px;"></div>
     </div>
 
     <audio id="player" loop preload="auto">
@@ -187,6 +228,15 @@
     </audio>
 
     <script>
+        // BACKGROUND ZOOM ON SCROLL
+        window.addEventListener('scroll', () => {
+            const scroll = window.scrollY;
+            const bg = document.getElementById('bgImage');
+            // Scale background slightly as you scroll (from 1.0 to 1.1)
+            const scale = 1 + (scroll / 5000); 
+            bg.style.transform = `scale(${scale})`;
+        });
+
         function startAudio() {
             const audio = document.getElementById('player');
             const overlay = document.getElementById('overlay');
@@ -195,12 +245,9 @@
             audio.currentTime = 20;
             audio.play().then(() => {
                 overlay.style.opacity = '0';
-                // Enable scroll on the body
                 document.body.style.overflowY = "auto"; 
-                document.documentElement.style.overflowY = "auto";
-
                 setTimeout(() => {
-                    overlay.style.display = 'none'; // Completely remove overlay so buttons work
+                    overlay.style.display = 'none';
                     card.classList.add('active');
                 }, 800);
             }).catch(err => {
