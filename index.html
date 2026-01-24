@@ -7,194 +7,149 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
+        /* THE ULTIMATE BACKGROUND FIX */
         body, html { 
             width: 100%; height: 100%;
-            font-family: -apple-system, system-ui, sans-serif; 
-            background-color: #000; color: #fff;
-            overflow-x: hidden; overflow-y: hidden;
+            background-color: #050505; /* Very dark grey instead of pure black to test visibility */
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            overflow-x: hidden;
         }
 
-        /* BACKGROUND CONTAINER */
-        .bg-layer {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -5; background: #000; overflow: hidden;
-        }
-
-        #bgImage {
-            position: absolute;
-            top: 50%; left: 50%;
+        #bg-container {
+            position: fixed;
+            top: 0; left: 0;
             width: 100vw; height: 100vh;
-            transform: translate(-50%, -50%);
-            object-fit: cover;
-            display: block;
-            opacity: 1 !important;
-            visibility: visible !important;
-            transition: transform 0.3s ease-out, filter 0.4s ease;
+            z-index: -10;
+            /* USING CSS BACKGROUND-IMAGE METHOD */
+            background-image: url('https://raw.githubusercontent.com/zzzlub/zlub-site/refs/heads/main/IMG_5991.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: transform 0.3s ease-out, filter 0.5s ease;
         }
 
-        .overlay-tint {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.45); z-index: -4;
+        /* Dark tint so text stays sharp */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -9;
         }
 
-        /* UI ELEMENTS */
-        .cart-icon {
-            position: fixed; top: 25px; right: 25px; z-index: 100;
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px);
-            width: 55px; height: 55px; border-radius: 50%; 
-            display: flex; justify-content: center; align-items: center;
-            cursor: pointer; border: 1px solid rgba(255, 255, 255, 0.2); 
-        }
-        
-        #cart-count {
-            position: absolute; top: -2px; right: -2px; background: #ff0050;
-            font-size: 11px; min-width: 20px; height: 20px; padding: 0 5px;
-            border-radius: 10px; display: flex; justify-content: center; 
-            align-items: center; font-weight: 900; border: 2px solid #000;
+        /* UI STYLING */
+        #mainCard {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
         }
 
-        #toast-notification {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
-            background: #fff; color: #000; padding: 12px 25px;
-            border-radius: 50px; font-weight: 700; font-size: 13px; z-index: 2000;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .glass-box {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 60px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
-        #toast-notification.show { transform: translateX(-50%) translateY(0); }
 
-        #cart-sidebar {
-            position: fixed; top: 0; right: -400px; width: 350px; height: 100%;
-            background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(30px);
-            z-index: 1000; padding: 50px 30px; transition: 0.5s ease;
-            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        /* ENTER SCREEN */
+        #entry-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: opacity 0.8s ease;
         }
-        #cart-sidebar.open { right: 0; }
 
-        /* TIERS */
-        .tiers-section { padding: 80px 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
-        .tier-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); padding: 40px 30px; border-radius: 28px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.1); }
-        .cart-btn { width: 100%; padding: 15px; border-radius: 14px; border: none; color: #fff; font-weight: 800; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
+        .tiers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-        .bronze { border-top: 5px solid #cd7f32; } .bronze .cart-btn { background: #cd7f32; }
-        .silver { border-top: 5px solid #c0c0c0; } .silver .cart-btn { background: #7a7a7a; }
-        .gold { border-top: 5px solid #ffd700; } .gold .cart-btn { background: #ffd700; color: #000; }
-        .ultra { border-top: 5px solid #a333ff; } .ultra .cart-btn { background: #a333ff; }
+        .tier {
+            background: rgba(255,255,255,0.05);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
 
-        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        .buy-btn {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background: #fff;
+            color: #000;
+            border: none;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-    <div id="overlay" onclick="startSite()">
-        <p style="color: white; letter-spacing: 5px; font-size: 11px;">TAP TO ENTER</p>
+    <div id="entry-overlay" onclick="enterExperience()">
+        <p style="letter-spacing: 10px; font-weight: 200; font-size: 12px;">TAP TO ENTER</p>
     </div>
 
-    <div id="toast-notification">ADDED TO BAG</div>
+    <div id="bg-container"></div>
+    <div class="overlay"></div>
 
-    <div class="cart-icon" onclick="toggleCart()">
-        <span style="font-size: 20px;">👜</span>
-        <span id="cart-count">0</span>
-    </div>
-
-    <div id="cart-sidebar">
-        <h2 style="margin-bottom: 20px;">Bag</h2>
-        <div id="cart-items" style="flex-grow: 1; overflow-y: auto;"></div>
-        <div style="padding-top: 20px;">
-            <div style="display: flex; justify-content: space-between; font-size: 1.4rem; font-weight: 700; margin-bottom: 20px;">
-                <span>Total</span><span id="total-val">$0</span>
-            </div>
-            <button class="cart-btn" style="background:#fff; color:#000;" onclick="alert('Checkout coming soon.')">Checkout</button>
-            <p onclick="toggleCart()" style="text-align: center; margin-top: 25px; cursor: pointer; opacity: 0.4; font-size: 12px;">CLOSE</p>
+    <div id="mainCard">
+        <div class="glass-box">
+            <h1 style="font-size: 3rem; font-weight: 800; letter-spacing: -2px;">zzlub</h1>
+            <p style="opacity: 0.5; letter-spacing: 5px; font-size: 10px; margin-top: 10px;">PREMIUM EXPERIENCE</p>
         </div>
     </div>
 
-    <div class="bg-layer">
-        <img id="bgImage" 
-             src="https://raw.githubusercontent.com/zzzlub/zlub-site/refs/heads/main/IMG_5991.jpg" 
-             crossorigin="anonymous"
-             onload="console.log('Image Loaded!')"
-             onerror="this.src='https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?q=80&w=2000&auto=format&fit=crop'">
-    </div>
-    <div class="overlay-tint"></div>
-
-    <div class="main-content">
-        <section style="height: 100vh; display: flex; justify-content: center; align-items: center;">
-            <div id="mainCard" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); padding: 40px; border-radius: 24px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.2); opacity: 0; transform: translateY(20px); transition: 1.5s ease;">
-                <h1>Team coming soon...</h1>
-                <p style="margin-top: 40px; font-size: 10px; opacity: 0.5; letter-spacing: 3px;">SCROLL TO BROWSE</p>
-            </div>
-        </section>
-
-        <section class="tiers-section">
-            <div class="tier-card bronze"><p style="font-size: 12px; font-weight: 800;">BRONZE</p><p style="font-size: 2.2rem; margin: 15px 0 30px;">$30</p><button class="cart-btn" onclick="addToCart('Bronze', 30)">Add to Bag</button></div>
-            <div class="tier-card silver"><p style="font-size: 12px; font-weight: 800;">SILVER</p><p style="font-size: 2.2rem; margin: 15px 0 30px;">$50</p><button class="cart-btn" onclick="addToCart('Silver', 50)">Add to Bag</button></div>
-            <div class="tier-card gold"><p style="font-size: 12px; font-weight: 800;">GOLD</p><p style="font-size: 2.2rem; margin: 15px 0 30px;">$75</p><button class="cart-btn" onclick="addToCart('Gold', 75)">Add to Bag</button></div>
-            <div class="tier-card ultra"><p style="font-size: 12px; font-weight: 800;">ULTRA</p><p style="font-size: 2.2rem; margin: 15px 0 30px;">$100</p><button class="cart-btn" onclick="addToCart('Ultra', 100)">Add to Bag</button></div>
-        </section>
-
-        <section style="padding: 100px 20px; text-align: center;">
-            <a href="mailto:comboss@zoinbase.co.uk" style="color: #fff; text-decoration: none; font-weight: 300; opacity: 0.6;">comboss@zoinbase.co.uk</a>
-        </section>
+    <div class="tiers-grid">
+        <div class="tier"><h3>BRONZE</h3><p>$30</p><button class="buy-btn">ADD TO BAG</button></div>
+        <div class="tier"><h3>SILVER</h3><p>$50</p><button class="buy-btn">ADD TO BAG</button></div>
+        <div class="tier"><h3>GOLD</h3><p>$75</p><button class="buy-btn">ADD TO BAG</button></div>
+        <div class="tier"><h3>ULTRA</h3><p>$100</p><button class="buy-btn">ADD TO BAG</button></div>
     </div>
 
-    <audio id="player" loop preload="auto">
+    <audio id="bgMusic" loop>
         <source src="https://raw.githubusercontent.com/zzzlub/zlub-site/main/Weiland%20-%20Blue%20Bands%20-%20saucegodest%20-%20SoundLoadMate.com.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        let cart = [];
-        let total = 0;
-
-        // Force a re-load of the image if it stalls
-        window.onload = function() {
-            const img = document.getElementById('bgImage');
-            img.src = img.src + '?t=' + new Date().getTime(); // Busts cache
+        function enterExperience() {
+            const overlay = document.getElementById('entry-overlay');
+            const music = document.getElementById('bgMusic');
+            
+            music.currentTime = 20;
+            music.play();
+            
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 800);
         }
 
-        function showToast() {
-            const toast = document.getElementById('toast-notification');
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2000);
-        }
-
-        function addToCart(name, price) {
-            cart.push({name, price, id: Date.now()});
-            total += price;
-            updateCart();
-            showToast();
-        }
-
-        function updateCart() {
-            document.getElementById('cart-count').innerText = cart.length;
-            const list = document.getElementById('cart-items');
-            list.innerHTML = cart.map(item => `<div class="cart-item"><div><b>${item.name}</b><br><span style="opacity:0.5">$${item.price}</span></div><span style="color:#ff0050; cursor:pointer; font-size:10px;" onclick="removeFromCart(${item.id}, ${item.price})">REMOVE</span></div>`).join('');
-            document.getElementById('total-val').innerText = "$" + total;
-        }
-
-        function removeFromCart(id, price) {
-            cart = cart.filter(i => i.id !== id);
-            total -= price;
-            updateCart();
-        }
-
-        function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('open'); }
-
+        // Parallax and Blur effect on scroll
         window.addEventListener('scroll', () => {
-            const bg = document.getElementById('bgImage');
             const scroll = window.scrollY;
-            bg.style.transform = `translate(-50%, -50%) scale(${1 + (scroll / 3000)})`;
-            bg.style.filter = `blur(${Math.min(scroll / 100, 12)}px)`;
+            const bg = document.getElementById('bg-container');
+            bg.style.transform = `scale(${1 + scroll/5000})`;
+            bg.style.filter = `blur(${Math.min(scroll/100, 15)}px)`;
         });
-
-        function startSite() {
-            const audio = document.getElementById('player');
-            audio.currentTime = 20;
-            audio.play().then(() => {
-                document.getElementById('overlay').style.display = 'none';
-                document.body.style.overflowY = "auto";
-                const mc = document.getElementById('mainCard');
-                mc.style.opacity = '1'; mc.style.transform = 'translateY(0)';
-            });
-        }
     </script>
 </body>
 </html>
