@@ -54,7 +54,7 @@
         }
         @keyframes flow { to { background-position: 300% center; } }
 
-        /* --- CARDS (SMALLER) --- */
+        /* --- CARDS (COMPACT) --- */
         .content { position: relative; z-index: 1; padding-top: 15vh; text-align: center; }
         .hero-title { font-size: 4rem; letter-spacing: -3px; }
         .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; max-width: 1100px; margin: 40px auto; padding: 20px; }
@@ -62,7 +62,7 @@
         .card { 
             background: rgba(0, 0, 0, 0.9); padding: 25px; border-radius: 20px; 
             border: 1px solid rgba(255,255,255,0.05); transition: 0.4s ease;
-            position: relative; overflow: hidden; min-height: 220px; /* Reduced height */
+            position: relative; overflow: hidden; min-height: 200px; 
             display: flex; flex-direction: column; justify-content: center;
         }
 
@@ -71,7 +71,6 @@
         .gold { border-top: 4px solid #ffd700; }
         .ultra { border-top: 4px solid #a333ff; }
 
-        /* Reward Overlay */
         .reward-info {
             position: absolute; inset: 0; background: rgba(0,0,0,0.95);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -134,52 +133,43 @@
 
     <div class="content">
         <h1 class="hero-title">zzlub</h1>
-        <p style="letter-spacing: 15px; font-size: 10px; opacity: 0.5; margin-bottom: 30px;">NETWORK UTILITY</p>
+        <p style="letter-spacing: 15px; font-size: 10px; opacity: 0.5; margin-bottom: 30px; text-transform: uppercase;">LARP SERIES</p>
 
         <div class="tiers">
             <div class="card bronze">
                 <div class="reward-info">
-                    <ul>
-                        <li>Community Networking</li>
-                    </ul>
+                    <ul><li>Community Networking</li></ul>
                     <button class="buy-btn" onclick="addToBag('LARPBRONZE', 30)">ADD</button>
                 </div>
-                <h3 style="color:#cd7f32; font-size: 1rem;">LARPBRONZE</h3>
-                <p style="font-size: 0.9rem; margin-top: 5px;">$30</p>
+                <h3 style="color:#cd7f32; font-size: 0.9rem;">LARPBRONZE</h3>
+                <p style="font-size: 0.8rem; margin-top: 5px;">$30</p>
             </div>
 
             <div class="card silver">
                 <div class="reward-info">
-                    <ul>
-                        <li>Encrypted File Hosting</li>
-                        <li>Exclusive Media Kit</li>
-                    </ul>
+                    <ul><li>Exclusive Media Kit</li></ul>
                     <button class="buy-btn" onclick="addToBag('LARPSILVER', 50)">ADD</button>
                 </div>
-                <h3 style="color:#c0c0c0; font-size: 1rem;">LARPSILVER</h3>
-                <p style="font-size: 0.9rem; margin-top: 5px;">$50</p>
+                <h3 style="color:#c0c0c0; font-size: 0.9rem;">LARPSILVER</h3>
+                <p style="font-size: 0.8rem; margin-top: 5px;">$50</p>
             </div>
 
             <div class="card gold">
                 <div class="reward-info">
-                    <ul>
-                        <li>Custom UI Themes</li>
-                    </ul>
+                    <ul><li>Custom UI Themes</li></ul>
                     <button class="buy-btn" onclick="addToBag('LARPGOLD', 75)">ADD</button>
                 </div>
-                <h3 style="color:#ffd700; font-size: 1rem;">LARPGOLD</h3>
-                <p style="font-size: 0.9rem; margin-top: 5px;">$75</p>
+                <h3 style="color:#ffd700; font-size: 0.9rem;">LARPGOLD</h3>
+                <p style="font-size: 0.8rem; margin-top: 5px;">$75</p>
             </div>
 
             <div class="card ultra">
                 <div class="reward-info">
-                    <ul>
-                        <li>direct communication with comboss</li>
-                    </ul>
+                    <ul><li>direct communication with comboss</li></ul>
                     <button class="buy-btn" onclick="addToBag('LARPULTRA', 100)">ADD</button>
                 </div>
-                <h3 style="color:#a333ff; font-size: 1rem;">LARPULTRA</h3>
-                <p style="font-size: 0.9rem; margin-top: 5px;">$100</p>
+                <h3 style="color:#a333ff; font-size: 0.9rem;">LARPULTRA</h3>
+                <p style="font-size: 0.8rem; margin-top: 5px;">$100</p>
             </div>
         </div>
     </div>
@@ -216,7 +206,7 @@
         function addToBag(name, price) {
             bag.push({name, price});
             document.getElementById('cart-count').innerText = bag.length;
-            document.getElementById('bag-list').innerHTML = bag.map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>${i.name}</span><span>$${i.price}</span></div>`).join('');
+            document.getElementById('bag-list').innerHTML = bag.map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:12px;"><span>${i.name}</span><span>$${i.price}</span></div>`).join('');
             document.getElementById('total-price').innerText = `Total: $${bag.reduce((s, i) => s + i.price, 0)}`;
             if(!document.getElementById('sidebar').classList.contains('open')) toggleBag();
         }
