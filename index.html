@@ -7,7 +7,6 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        /* Absolute transparency to force the image to show */
         html, body { 
             width: 100%; min-height: 100vh; 
             background: none !important; 
@@ -66,6 +65,21 @@
             display: flex; align-items: center; justify-content: center; font-weight: 900;
         }
 
+        /* --- NOW PLAYING BOX --- */
+        #player-ui {
+            position: fixed; top: 90px; right: 25px; z-index: 100;
+            background: rgba(255,255,255,0.05); backdrop-filter: blur(15px);
+            padding: 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
+            width: 200px; text-align: left;
+        }
+        .track-info { font-size: 10px; letter-spacing: 1px; margin-bottom: 8px; opacity: 0.7; }
+        .progress-bar { width: 100%; height: 2px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+        #progress { width: 0%; height: 100%; background: #fff; }
+        .skip-btn { 
+            margin-top: 10px; background: none; border: 1px solid rgba(255,255,255,0.3); 
+            color: #fff; font-size: 9px; padding: 4px 8px; border-radius: 5px; cursor: pointer;
+        }
+
         /* --- SIDEBAR --- */
         #sidebar {
             position: fixed; top: 0; right: -400px; width: 320px; height: 100%;
@@ -90,7 +104,9 @@
         .card {
             background: rgba(255,255,255,0.05); backdrop-filter: blur(20px);
             padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer; transition: 0.3s;
         }
+        .card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.1); }
 
         .bronze { border-top: 5px solid #cd7f32; }
         .silver { border-top: 5px solid #c0c0c0; }
@@ -100,7 +116,6 @@
         .btn { margin-top: 25px; width: 100%; padding: 15px; border: none; border-radius: 12px; background: #fff; color: #000; font-weight: 800; cursor: pointer; }
         .checkout-btn { background: #00ff88; color: #000; margin-top: 10px; }
         
-        /* --- FOOTER --- */
         footer { position: relative; z-index: 1; padding: 60px 20px; text-align: center; }
         .footer-email {
             font-size: 11px; letter-spacing: 5px; opacity: 0.4;
@@ -130,6 +145,12 @@
     <div class="cart-icon" onclick="toggleBag()">
         <div id="cart-count">0</div>
         👜
+    </div>
+
+    <div id="player-ui">
+        <div class="track-info">NOW PLAYING: WEILAND - BLUE BANDS</div>
+        <div class="progress-bar"><div id="progress"></div></div>
+        <button class="skip-btn" onclick="skipAudio()">SKIP</button>
     </div>
 
     <div id="sidebar">
@@ -180,6 +201,16 @@
             audio.play();
             document.getElementById('entry').classList.add('hidden');
         }
+
+        function skipAudio() {
+            audio.currentTime = audio.duration - 1; // Skips to end to trigger loop or just move ahead
+        }
+
+        // Update progress bar
+        audio.ontimeupdate = function() {
+            let percentage = (audio.currentTime / audio.duration) * 100;
+            document.getElementById('progress').style.width = percentage + "%";
+        };
 
         function toggleBag() { document.getElementById('sidebar').classList.toggle('open'); }
 
