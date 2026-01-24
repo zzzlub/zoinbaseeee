@@ -18,6 +18,28 @@
             flex-direction: column;
         }
 
+        /* --- ENTRY SCREEN WITH GRADIENT WIPE --- */
+        #entry {
+            position: fixed; inset: 0; background: #000; z-index: 9999;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            transition: opacity 1.2s ease-in-out;
+        }
+        .fade-text {
+            letter-spacing: 12px; font-size: 14px; font-family: monospace;
+            background: linear-gradient(to right, #222 20%, #fff 50%, #222 80%);
+            background-size: 200% auto;
+            color: #000;
+            background-clip: text;
+            text-fill-color: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 2.5s linear infinite;
+            font-weight: bold;
+        }
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
         /* --- BACKGROUND SYSTEM --- */
         #bg-container {
             position: fixed; top: 0; left: 0;
@@ -26,7 +48,6 @@
             pointer-events: none;
             background: #000;
         }
-
         #bg-image {
             width: 100%; height: 100%;
             background-image: url('https://raw.githubusercontent.com/zzzlub/zlub-site/main/IMG_5991.jpg');
@@ -34,7 +55,6 @@
             background-position: center;
             background-size: 100% 100%; 
         }
-
         @media (min-width: 769px) {
             #bg-image {
                 transform: rotate(90deg);
@@ -43,7 +63,6 @@
                 margin-top: -50vw; margin-left: -50vh;
             }
         }
-
         .overlay-tint {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.45); z-index: -1; pointer-events: none;
@@ -51,7 +70,6 @@
 
         /* --- UI ELEMENTS --- */
         #chrono { position: fixed; top: 25px; left: 25px; z-index: 100; font-family: monospace; font-size: 1.1rem; }
-        
         .cart-icon {
             position: fixed; top: 25px; right: 25px; z-index: 100;
             width: 55px; height: 55px; border-radius: 50%;
@@ -60,7 +78,7 @@
             cursor: pointer; border: 1px solid rgba(255,255,255,0.2);
         }
 
-        /* --- BOTTOM LEFT MEDIA PLAYER --- */
+        /* --- MEDIA PLAYER (BOTTOM LEFT) --- */
         #player-ui {
             position: fixed; bottom: 25px; left: 25px; z-index: 100;
             background: rgba(10,10,10,0.8); backdrop-filter: blur(20px);
@@ -70,16 +88,30 @@
         .track-info { font-size: 8px; letter-spacing: 2px; margin-bottom: 8px; opacity: 0.5; font-family: monospace; text-transform: uppercase; }
         .progress-bar { width: 100%; height: 2px; background: rgba(255,255,255,0.1); margin-bottom: 12px; cursor: pointer; }
         #progress { width: 0%; height: 100%; background: #00ff88; box-shadow: 0 0 10px #00ff88; }
-        
         .controls { display: flex; align-items: center; gap: 15px; }
         .media-btn { background: none; border: none; color: #fff; cursor: pointer; font-size: 16px; opacity: 0.7; transition: 0.2s; display: flex; align-items: center; }
         .media-btn:hover { opacity: 1; transform: scale(1.1); }
-        
         .vol-container { display: flex; align-items: center; gap: 8px; flex-grow: 1; }
         #vol-slider { width: 100%; accent-color: #00ff88; cursor: pointer; height: 2px; opacity: 0.5; }
-        #vol-slider:hover { opacity: 1; }
 
-        /* --- SIDEBAR & CONTENT --- */
+        /* --- CONTENT --- */
+        .content { position: relative; z-index: 1; padding-top: 25vh; text-align: center; flex: 1; }
+        .hero-title { font-size: clamp(3rem, 10vw, 5rem); letter-spacing: -3px; }
+        .tiers {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px; max-width: 1200px; margin: 60px auto; padding: 0 20px;
+        }
+        .card {
+            background: rgba(255,255,255,0.05); backdrop-filter: blur(20px);
+            padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
+        }
+        .bronze { border-top: 5px solid #cd7f32; }
+        .silver { border-top: 5px solid #c0c0c0; }
+        .gold { border-top: 5px solid #ffd700; }
+        .ultra { border-top: 5px solid #a333ff; }
+        .btn { margin-top: 25px; width: 100%; padding: 15px; border: none; border-radius: 12px; background: #fff; color: #000; font-weight: 800; cursor: pointer; }
+        .checkout-btn { background: #00ff88; color: #000; margin-top: 10px; }
+        
         #sidebar {
             position: fixed; top: 0; right: -400px; width: 320px; height: 100%;
             background: rgba(10,10,10,0.98); backdrop-filter: blur(40px);
@@ -87,47 +119,17 @@
             border-left: 1px solid rgba(255,255,255,0.1);
         }
         #sidebar.open { right: 0; }
-        #bag-list { margin-top: 20px; max-height: 60vh; overflow-y: auto; }
         .bag-item { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
 
-        .content { position: relative; z-index: 1; padding-top: 25vh; text-align: center; flex: 1; }
-        .hero-title { font-size: clamp(3rem, 10vw, 5rem); letter-spacing: -3px; }
-
-        .tiers {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 25px; max-width: 1200px; margin: 60px auto; padding: 0 20px;
-        }
-
-        .card {
-            background: rgba(255,255,255,0.05); backdrop-filter: blur(20px);
-            padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
-            transition: 0.3s;
-        }
-        .card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.1); }
-
-        .bronze { border-top: 5px solid #cd7f32; }
-        .silver { border-top: 5px solid #c0c0c0; }
-        .gold { border-top: 5px solid #ffd700; }
-        .ultra { border-top: 5px solid #a333ff; }
-
-        .btn { margin-top: 25px; width: 100%; padding: 15px; border: none; border-radius: 12px; background: #fff; color: #000; font-weight: 800; cursor: pointer; }
-        .checkout-btn { background: #00ff88; color: #000; margin-top: 10px; }
-        
         footer { position: relative; z-index: 1; padding: 100px 20px 40px; text-align: center; }
         .footer-email { font-size: 10px; letter-spacing: 5px; opacity: 0.3; text-decoration: none; color: #fff; transition: 0.3s; text-transform: uppercase; }
         .footer-email:hover { opacity: 1; color: #00ff88; }
-
-        #entry {
-            position: fixed; inset: 0; background: #000; z-index: 9999;
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
-            transition: opacity 1s ease;
-        }
     </style>
 </head>
 <body>
 
     <div id="entry" onclick="start()">
-        <p style="letter-spacing: 8px; font-size: 10px; font-family: monospace; opacity: 0.6;">INITIALIZE SYSTEM</p>
+        <p class="fade-text">MOVE FUNDS G</p>
     </div>
 
     <div id="bg-container"><div id="bg-image"></div></div>
@@ -136,7 +138,7 @@
     <div id="chrono">00:00:00</div>
 
     <div class="cart-icon" onclick="toggleBag()">
-        <div id="cart-count">0</div>
+        <div id="cart-count" style="position: absolute; top: -5px; right: -5px; background: #ff0050; font-size: 12px; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900;">0</div>
         👜
     </div>
 
@@ -155,7 +157,7 @@
 
     <div id="sidebar">
         <h2 style="letter-spacing: -1px;">Bag</h2>
-        <div id="bag-list"></div>
+        <div id="bag-list" style="margin-top: 20px;"></div>
         <div style="padding-top: 20px; margin-top: auto;">
             <p id="total-price" style="font-weight: bold; margin-bottom: 15px; font-size: 1.2rem;">Total: $0</p>
             <button class="btn checkout-btn" onclick="alert('Redirecting...')">SECURE CHECKOUT</button>
@@ -199,7 +201,7 @@
         function start() {
             audio.play();
             document.getElementById('entry').style.opacity = '0';
-            setTimeout(() => document.getElementById('entry').style.display = 'none', 1000);
+            setTimeout(() => document.getElementById('entry').style.display = 'none', 1200);
         }
 
         function togglePlay() {
@@ -209,39 +211,22 @@
         }
 
         function skipAudio() { audio.currentTime = 0; audio.play(); }
-
-        function toggleMute() {
-            audio.muted = !audio.muted;
-            document.getElementById('mute-btn').innerText = audio.muted ? '🔇' : '🔊';
-        }
-
+        function toggleMute() { audio.muted = !audio.muted; document.getElementById('mute-btn').innerText = audio.muted ? '🔇' : '🔊'; }
         function updateVolume(val) { audio.volume = val; }
-
-        function seek(e) {
-            const bar = e.currentTarget;
-            const clickX = e.offsetX;
-            const width = bar.offsetWidth;
-            audio.currentTime = (clickX / width) * audio.duration;
-        }
+        function seek(e) { audio.currentTime = (e.offsetX / e.currentTarget.offsetWidth) * audio.duration; }
 
         audio.ontimeupdate = () => {
-            let percentage = (audio.currentTime / audio.duration) * 100;
-            document.getElementById('progress').style.width = percentage + "%";
+            document.getElementById('progress').style.width = (audio.currentTime / audio.duration) * 100 + "%";
         };
 
         function toggleBag() { document.getElementById('sidebar').classList.toggle('open'); }
         function addToBag(n, p) {
             bag.push({name:n, price:p});
-            updateUI();
-            if(!document.getElementById('sidebar').classList.contains('open')) toggleBag();
-        }
-
-        function updateUI() {
             document.getElementById('cart-count').innerText = bag.length;
             document.getElementById('bag-list').innerHTML = bag.map(i => `<div class="bag-item"><span>${i.name}</span><span>$${i.price}</span></div>`).join('');
             document.getElementById('total-price').innerText = `Total: $${bag.reduce((s, i) => s + i.price, 0)}`;
+            if(!document.getElementById('sidebar').classList.contains('open')) toggleBag();
         }
-
         setInterval(() => { document.getElementById('chrono').innerText = new Date().toLocaleTimeString(); }, 1000);
     </script>
 </body>
