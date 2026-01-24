@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>zzlub</title>
     <style>
-        /* 1. RESET & CORE STYLES */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body, html { 
@@ -15,43 +14,37 @@
             background-color: #000;
             color: #fff;
             overflow-x: hidden;
-            /* Scroll starts locked */
-            overflow-y: hidden; 
+            overflow-y: hidden; /* Locked until enter */
         }
 
-        /* 2. BACKGROUND IMAGE (HEIC) */
-        .bg-container {
+        /* 1. THE BACKGROUND FIX (Reverted to the CSS version that worked) */
+        .bg-fixed {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-            overflow: hidden;
-        }
-
-        #bgImage {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Makes it fit the display perfectly */
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                        url('https://raw.githubusercontent.com/zzzlub/zlub-site/main/IMG_5991.HEIC');
+            background-size: cover; 
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -1;
             transition: transform 0.2s ease-out;
         }
 
-        .dimmer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.3);
-            z-index: -1;
+        /* Mobile specific background tweak */
+        @media (max-width: 768px) {
+            .bg-fixed {
+                background-position: 70% center; /* Shows more of the watch face on thin screens */
+            }
         }
 
-        /* 3. CONTENT LAYOUT */
         .main-content {
             position: relative;
-            z-index: 10;
+            z-index: 1;
             width: 100%;
+            background: transparent;
         }
 
         .hero {
@@ -59,9 +52,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            background: transparent;
         }
 
-        /* The Hero Card */
+        /* The Card with Shimmer */
         .card {
             background: rgba(255, 255, 255, 0.1); 
             backdrop-filter: blur(20px); 
@@ -70,13 +64,10 @@
             border-radius: 24px; 
             text-align: center; 
             border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            
-            /* Hidden initially */
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 1.5s ease, transform 1.2s ease;
-            max-width: 85%;
+            max-width: 90%;
         }
 
         .card.active { opacity: 1; transform: translateY(0); }
@@ -108,7 +99,7 @@
         }
         .tiktok-link:hover { background: #ff0050; }
 
-        /* 4. TIERS & COLORED BUTTONS */
+        /* 2. TIERS SECTION */
         .tiers-section {
             padding: 60px 20px;
             display: grid;
@@ -116,26 +107,31 @@
             gap: 20px;
             max-width: 1200px;
             margin: 0 auto;
+            background: transparent;
         }
 
         .tier-card {
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            padding: 35px 25px;
-            border-radius: 22px;
+            padding: 30px;
+            border-radius: 20px;
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .tier-name { font-weight: 800; font-size: 1.2rem; margin-bottom: 10px; }
+        .tier-name { font-weight: 800; font-size: 1.2rem; margin-bottom: 8px; }
         .tier-price { font-size: 2.2rem; font-weight: 300; margin-bottom: 25px; }
 
+        /* Colored Buttons with Hover-Scale */
         .cart-btn {
             width: 100%; padding: 14px; border-radius: 12px; border: none;
-            color: #fff; font-weight: 800; cursor: pointer; transition: 0.3s;
+            color: #fff; font-weight: 800; cursor: pointer; 
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s;
             text-transform: uppercase;
         }
+
+        .cart-btn:hover { transform: scale(1.08); } /* Buttons get slightly bigger */
 
         .bronze { border-top: 5px solid #cd7f32; }
         .bronze .cart-btn { background: #cd7f32; }
@@ -149,22 +145,23 @@
         .ultra { border-top: 5px solid #a333ff; }
         .ultra .cart-btn { background: #a333ff; }
 
-        /* 5. CONTACT SECTION */
+        /* 3. CONTACT */
         .contact-section {
-            padding: 80px 20px;
+            padding: 100px 20px;
             text-align: center;
+            background: transparent;
         }
         .contact-card {
             background: rgba(255, 255, 255, 0.05);
             padding: 40px;
             border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
             display: inline-block;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .contact-card h2 { margin-bottom: 10px; font-size: 1.2rem; letter-spacing: 2px; opacity: 0.6; }
-        .contact-card a { color: #fff; text-decoration: none; font-size: 1.1rem; }
+        .contact-card a { color: #fff; text-decoration: none; opacity: 0.7; transition: 0.3s; }
+        .contact-card a:hover { opacity: 1; }
 
-        /* 6. ENTRY OVERLAY */
+        /* OVERLAY */
         #overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 9999; display: flex; 
@@ -179,17 +176,14 @@
         <p style="color: white; letter-spacing: 3px; font-size: 12px;">TAP TO ENTER</p>
     </div>
 
-    <div class="bg-container">
-        <img id="bgImage" src="https://raw.githubusercontent.com/zzzlub/zlub-site/main/IMG_5991.HEIC" alt="background">
-    </div>
-    <div class="dimmer"></div>
+    <div class="bg-fixed" id="bgImage"></div>
 
     <div class="main-content">
         <section class="hero">
             <div class="card" id="mainCard">
                 <h1>Team coming soon...</h1>
                 <a href="https://www.tiktok.com/@zzzlub?_r=1&_t=ZN-93K97bcFoFa" target="_blank" class="tiktok-link">TikTok</a>
-                <p style="margin-top: 40px; font-size: 10px; opacity: 0.5; letter-spacing: 2px;">SCROLL FOR TIERS</p>
+                <p style="margin-top: 40px; font-size: 10px; opacity: 0.6; letter-spacing: 2px;">SCROLL DOWN</p>
             </div>
         </section>
 
@@ -218,12 +212,12 @@
 
         <section class="contact-section">
             <div class="contact-card">
-                <h2>CONTACT</h2>
+                <h2 style="margin-bottom: 10px; font-size: 1.2rem; letter-spacing: 2px;">CONTACT</h2>
                 <a href="mailto:comboss@zoinbase.co.uk">comboss@zoinbase.co.uk</a>
             </div>
         </section>
 
-        <div style="height: 100px;"></div>
+        <div style="height: 50px;"></div>
     </div>
 
     <audio id="player" loop preload="auto">
@@ -231,39 +225,30 @@
     </audio>
 
     <script>
-        // HANDLE SCROLL ZOOM
+        // BACKGROUND ZOOM LOGIC
         window.addEventListener('scroll', () => {
             const scroll = window.scrollY;
             const bg = document.getElementById('bgImage');
-            const scale = 1 + (scroll / 3000); // Gentle zoom
+            const scale = 1 + (scroll / 4000); 
             bg.style.transform = `scale(${scale})`;
         });
 
-        // HANDLE SITE ENTRY
         function startSite() {
             const audio = document.getElementById('player');
             const overlay = document.getElementById('overlay');
             const card = document.getElementById('mainCard');
             
-            // Start audio at 20s
             audio.currentTime = 20;
-            
             audio.play().then(() => {
-                // Remove overlay
                 overlay.style.opacity = '0';
-                
-                // UNLOCK SCROLLING
-                document.body.style.overflowY = "auto";
-                document.documentElement.style.overflowY = "auto";
-
+                document.body.style.overflowY = "auto"; 
                 setTimeout(() => {
-                    overlay.style.display = 'none'; // Clear the click-blocker
-                    card.classList.add('active'); // Show the Team card
+                    overlay.style.display = 'none';
+                    card.classList.add('active');
                 }, 800);
             }).catch(err => {
-                // Fallback if audio fails
-                overlay.style.display = 'none';
                 document.body.style.overflowY = "auto";
+                overlay.style.display = 'none';
                 card.classList.add('active');
             });
         }
