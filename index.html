@@ -26,7 +26,7 @@
             background-position: center;
             z-index: -2;
         }
-        .overlay-tint { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); z-index: -1; }
+        .overlay-tint { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); z-index: -1; }
 
         /* --- AUTH GATE --- */
         #auth-gate {
@@ -54,7 +54,7 @@
         }
         @keyframes flow { to { background-position: 300% center; } }
 
-        /* --- CARDS (COMPACT) --- */
+        /* --- TIERS --- */
         .content { position: relative; z-index: 1; padding-top: 15vh; text-align: center; }
         .hero-title { font-size: 4rem; letter-spacing: -3px; }
         .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; max-width: 1100px; margin: 40px auto; padding: 20px; }
@@ -77,8 +77,7 @@
             opacity: 0; transition: 0.3s; padding: 15px; text-align: center;
         }
         .card:hover .reward-info { opacity: 1; }
-        .reward-info ul { list-style: none; margin-bottom: 12px; }
-        .reward-info li { margin-bottom: 6px; color: #00ff88; font-family: monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .reward-info li { margin-bottom: 6px; color: #00ff88; font-family: monospace; font-size: 10px; text-transform: uppercase; list-style: none; }
 
         .buy-btn {
             width: 100%; padding: 10px; border: none; 
@@ -86,12 +85,24 @@
             font-weight: bold; cursor: pointer; font-size: 12px;
         }
 
-        /* --- UI --- */
+        /* --- MEET THE TEAM --- */
+        .team-section { padding: 100px 20px; max-width: 1100px; margin: 0 auto; text-align: center; }
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; margin-top: 50px; }
+        .team-card { 
+            background: rgba(10, 10, 10, 0.8); border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px; overflow: hidden; transition: 0.3s;
+        }
+        .team-card:hover { transform: translateY(-10px); border-color: #ff0000; }
+        .team-img { width: 100%; height: 300px; object-fit: cover; filter: grayscale(100%) contrast(120%); transition: 0.5s; }
+        .team-card:hover .team-img { filter: grayscale(0%) contrast(100%); }
+        .team-info { padding: 20px; }
+        .team-role { font-family: monospace; color: #ff0000; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
+
+        /* --- UI ELEMENTS --- */
         .cart-icon { position: fixed; top: 25px; right: 25px; z-index: 100; width: 50px; height: 50px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         #sidebar { position: fixed; top: 0; right: -400px; width: 320px; height: 100%; background: #050505; z-index: 1001; padding: 40px; transition: 0.4s; border-left: 1px solid #222; }
         #sidebar.open { right: 0; }
         #player-ui { position: fixed; bottom: 25px; left: 25px; z-index: 100; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 12px; border: 1px solid #222; }
-        
         .terminal-input { width: 100%; background: #000; border: 1px solid #333; color: #00ff88; padding: 12px; margin: 8px 0; border-radius: 8px; font-family: monospace; outline: none; }
         .auth-btn { width: 100%; padding: 12px; background: #fff; color: #000; border: none; font-weight: 900; cursor: pointer; border-radius: 8px; margin-top: 10px; }
     </style>
@@ -118,27 +129,14 @@
         👜
     </div>
 
-    <div id="sidebar">
-        <h2 style="margin-bottom: 20px;">Bag</h2>
-        <div id="bag-list" style="margin-bottom: 20px;"></div>
-        <p id="total-price" style="font-weight: bold; margin-bottom: 20px;">Total: $0</p>
-        <button class="auth-btn" style="background:#00ff88;">CHECKOUT</button>
-        <button class="auth-btn" style="background:#111; color:#fff; margin-top:10px;" onclick="toggleBag()">CLOSE</button>
-    </div>
-
-    <div id="player-ui">
-        <p style="font-size: 8px; opacity: 0.5; margin-bottom: 5px;">WEILAND - BLUE BANDS</p>
-        <button onclick="togglePlay()" id="play-btn" style="background:none; border:none; color:#fff; cursor:pointer;">⏸</button>
-    </div>
-
     <div class="content">
         <h1 class="hero-title">zzlub</h1>
-        <p style="letter-spacing: 15px; font-size: 10px; opacity: 0.5; margin-bottom: 30px; text-transform: uppercase;">LARP SERIES</p>
+        <p style="letter-spacing: 15px; font-size: 10px; opacity: 0.5; margin-bottom: 30px;">LARP SERIES</p>
 
         <div class="tiers">
             <div class="card bronze">
                 <div class="reward-info">
-                    <ul><li>Community Networking</li></ul>
+                    <li>Community Networking</li>
                     <button class="buy-btn" onclick="addToBag('LARPBRONZE', 30)">ADD</button>
                 </div>
                 <h3 style="color:#cd7f32; font-size: 0.9rem;">LARPBRONZE</h3>
@@ -147,7 +145,7 @@
 
             <div class="card silver">
                 <div class="reward-info">
-                    <ul><li>Exclusive Media Kit</li></ul>
+                    <li>Exclusive Media Kit</li>
                     <button class="buy-btn" onclick="addToBag('LARPSILVER', 50)">ADD</button>
                 </div>
                 <h3 style="color:#c0c0c0; font-size: 0.9rem;">LARPSILVER</h3>
@@ -156,7 +154,7 @@
 
             <div class="card gold">
                 <div class="reward-info">
-                    <ul><li>Custom UI Themes</li></ul>
+                    <li>Custom UI Themes</li>
                     <button class="buy-btn" onclick="addToBag('LARPGOLD', 75)">ADD</button>
                 </div>
                 <h3 style="color:#ffd700; font-size: 0.9rem;">LARPGOLD</h3>
@@ -165,13 +163,48 @@
 
             <div class="card ultra">
                 <div class="reward-info">
-                    <ul><li>direct communication with comboss</li></ul>
+                    <li>direct communication with comboss</li>
                     <button class="buy-btn" onclick="addToBag('LARPULTRA', 100)">ADD</button>
                 </div>
                 <h3 style="color:#a333ff; font-size: 0.9rem;">LARPULTRA</h3>
                 <p style="font-size: 0.8rem; margin-top: 5px;">$100</p>
             </div>
         </div>
+
+        <div class="team-section">
+            <h2 style="letter-spacing: 10px; font-size: 14px; opacity: 0.7;">MEET THE TEAM</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <img src="https://raw.githubusercontent.com/zzzlub/zlub-site/main/IMG_6153.jpg" class="team-img" alt="CEO">
+                    <div class="team-info">
+                        <p class="team-role">CEO</p>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="https://raw.githubusercontent.com/zzzlub/zlub-site/main/IMG_6151.jpg" class="team-img" alt="CFO">
+                    <div class="team-info">
+                        <p class="team-role">CFO</p>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="https://raw.githubusercontent.com/zzzlub/zlub-site/main/IMG_6154.jpg" class="team-img" alt="VP">
+                    <div class="team-info">
+                        <p class="team-role">VP / CHAIRMAN</p>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="https://raw.githubusercontent.com/zzzlub/zlub-site/main/IMG_6150.jpg" class="team-img" alt="ComBoss">
+                    <div class="team-info">
+                        <p class="team-role">FELLOW COMBOSS</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="player-ui">
+        <p style="font-size: 8px; opacity: 0.5; margin-bottom: 5px;">WEILAND - BLUE BANDS</p>
+        <button onclick="togglePlay()" id="play-btn" style="background:none; border:none; color:#fff; cursor:pointer;">⏸</button>
     </div>
 
     <audio id="audio-player" src="https://raw.githubusercontent.com/zzzlub/zlub-site/main/Weiland%20-%20Blue%20Bands%20-%20saucegodest%20-%20SoundLoadMate.com.mp3"></audio>
@@ -206,8 +239,7 @@
         function addToBag(name, price) {
             bag.push({name, price});
             document.getElementById('cart-count').innerText = bag.length;
-            document.getElementById('bag-list').innerHTML = bag.map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:12px;"><span>${i.name}</span><span>$${i.price}</span></div>`).join('');
-            document.getElementById('total-price').innerText = `Total: $${bag.reduce((s, i) => s + i.price, 0)}`;
+            // Simplified bag update logic
             if(!document.getElementById('sidebar').classList.contains('open')) toggleBag();
         }
 
